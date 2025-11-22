@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.controller.MainController">
+
+    <!-- ========== TOP BAR – DENNE VIRKER ALTID ========== -->
+    <top>
+        <HBox alignment="CENTER" minHeight="80" style="-fx-background-color: #2c2c2c;">
+            <padding>
+                <Insets top="12" right="20" bottom="12" left="20"/>
+            </padding>
+
+            <!-- Tomt space til venstre (fylder halvdelen af det frie område) -->
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- DET SOM SKAL STÅ PRÆCIS I MIDTEN -->
+            <VBox alignment="CENTER" spacing="8">
+                <TextField fx:id="searchField"
+                           promptText="Search champions..."
+                           prefWidth="260"/>
+                <HBox alignment="CENTER" spacing="15">
+                    <Button fx:id="gameButton" text="Game" prefWidth="100" onAction="#onGameNav"/>
+                    <Button fx:id="championsButton" text="Champions" prefWidth="100" onAction="#onChampionsNav"/>
+                </HBox>
+            </VBox>
+
+            <!-- Tomt space til højre (fylder også halvdelen – så bliver midten ægte centreret) -->
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Knapper helt ude til højre – står nu på præcis samme højde! -->
+            <HBox spacing="12" alignment="CENTER">
+                <Button fx:id="themeToggleButton"
+                        text="Dark"
+                        onAction="#onThemeToggle"/>
+                <Button fx:id="refreshButton"
+                        text="Refresh"
+                        onAction="#onRefresh"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <center>
+        <StackPane fx:id="contentArea">
+            <Label text="Select a view above."
+                   style="-fx-font-size: 18; -fx-text-fill: #cccccc;"/>
+        </StackPane>
+    </center>
+
+    <!-- ========== FOOTER ========== -->
+    <bottom>
+        <HBox alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="10" right="12" bottom="10" left="12"/>
+            </padding>
+            <Label text="About" style="-fx-text-fill: #888888;"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Label text="v1.0.0" style="-fx-text-fill: #888888;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

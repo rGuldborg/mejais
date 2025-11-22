@@ -1,0 +1,39 @@
+/* dark.css – KORREKT VERSION */
+.root {
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: #dddddd;
+}
+
+/* Topbar og footer */
+.topbar { -fx-background-color: #2a2a2a; }
+.footer { -fx-background-color: #2a2a2a; }
+
+/* Knapper – VI BEVARER STANDARDHØJDEN! */
+.button {
+    -fx-background-color: #363636;
+    -fx-text-fill: #eeeeee;
+    -fx-border-color: #555555;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8 16 8 16;           /* VI TILFØJER PADDING TILBAGE! */
+    -fx-font-size: 13px;
+}
+
+/* TextField – behold standardhøjde */
+.text-field {
+    -fx-background-color: #363636;
+    -fx-text-fill: #eeeeee;
+    -fx-border-color: #555555;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-padding: 8;                   /* VIGTIGT – behold højden! */
+    -fx-font-size: 13px;
+}
+
+/* Hover effekter (valgfrit men pænt) */
+.button:hover {
+    -fx-background-color: #444444;
+}
+.text-field:focused {
+    -fx-border-color: #7777cc;
+}

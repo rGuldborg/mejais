@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.controller.GameController"
+            prefWidth="1200" prefHeight="800">
+
+    <!-- LEFT: ALLY TEAM -->
+    <left>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="20"/>
+            </padding>
+
+            <Label text="Your Team" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+            <!-- Ally bans -->
+            <HBox spacing="5">
+                <ImageView fx:id="allyBan1" fitWidth="40" fitHeight="40"/>
+                <ImageView fx:id="allyBan2" fitWidth="40" fitHeight="40"/>
+                <ImageView fx:id="allyBan3" fitWidth="40" fitHeight="40"/>
+                <ImageView fx:id="allyBan4" fitWidth="40" fitHeight="40"/>
+                <ImageView fx:id="allyBan5" fitWidth="40" fitHeight="40"/>
+            </HBox>
+
+            <!-- Ally picks -->
+            <VBox spacing="10">
+                <ImageView fx:id="allyPick1" fitWidth="80" fitHeight="80"/>
+                <ImageView fx:id="allyPick2" fitWidth="80" fitHeight="80"/>
+                <ImageView fx:id="allyPick3" fitWidth="80" fitHeight="80"/>
+                <ImageView fx:id="allyPick4" fitWidth="80" fitHeight="80"/>
+                <ImageView fx:id="allyPick5" fitWidth="80" fitHeight="80"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- CENTER: MAP -->
+    <center>
+        <StackPane>
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <ImageView fx:id="mapView" fitWidth="550" preserveRatio="true"/>
+        </StackPane>
+    </center>
+
+    <!-- RIGHT: ENEMY + RECOMMENDED PICKS -->
+    <right>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Label text="Enemy Team" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+            <!-- Enemy bans -->
+            <HBox spacing="5">
+                <ImageView fx:id="enemyBan1" fitWidth="40" fitHeight="40"/>
+                <ImageView fx:id="enemyBan2" fitWidth="40" fitHeight="40"/>
+                <ImageView fx:id="enemyBan3" fitWidth="40" fitHeight="40"/>
+                <ImageView fx:id="enemyBan4" fitWidth="40" fitHeight="40"/>
+                <ImageView fx:id="enemyBan5" fitWidth="40" fitHeight="40"/>
+            </HBox>
+
+            <!-- Enemy picks -->
+            <VBox spacing="10">
+                <ImageView fx:id="enemyPick1" fitWidth="80" fitHeight="80"/>
+                <ImageView fx:id="enemyPick2" fitWidth="80" fitHeight="80"/>
+                <ImageView fx:id="enemyPick3" fitWidth="80" fitHeight="80"/>
+                <ImageView fx:id="enemyPick4" fitWidth="80" fitHeight="80"/>
+                <ImageView fx:id="enemyPick5" fitWidth="80" fitHeight="80"/>
+            </VBox>
+
+            <!-- Recommended picks -->
+            <VBox spacing="10">
+                <Label text="Recommended Picks"
+                       style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                <ListView fx:id="recommendedList" prefHeight="250" prefWidth="250"/>
+            </VBox>
+        </VBox>
+    </right>
+
+</BorderPane>
