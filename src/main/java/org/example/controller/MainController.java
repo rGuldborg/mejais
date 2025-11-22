@@ -14,7 +14,7 @@ public class MainController {
     @FXML private Button themeToggleButton;
     @FXML private StackPane contentArea;
 
-    private boolean darkMode = true;
+    private boolean darkMode = true; // start in DARK MODE
 
     @FXML
     public void initialize() {
@@ -23,6 +23,9 @@ public class MainController {
         // Start med DARK mode
         ThemeManager.applyTheme("dark.css");
         themeToggleButton.setText("🌙 Dark");
+
+        // Load the primary GAME view by default so placeholders/map are visible immediately
+        loadView("game-view.fxml");
     }
 
     @FXML

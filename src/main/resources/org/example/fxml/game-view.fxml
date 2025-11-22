@@ -36,16 +36,26 @@
         </VBox>
     </left>
 
+    <!-- CENTER: MAP + RECOMMENDED PICKS BELOW -->
     <center>
-        <StackPane>
+        <VBox spacing="16">
             <padding>
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
 
-            <ImageView fx:id="mapView" fitWidth="550" preserveRatio="true"/>
-        </StackPane>
+            <StackPane>
+                <ImageView fx:id="mapView" fitWidth="550" preserveRatio="true"/>
+            </StackPane>
+
+            <VBox spacing="10">
+                <Label text="Recommended Picks"
+                       style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                <ListView fx:id="recommendedList" prefHeight="220" prefWidth="320"/>
+            </VBox>
+        </VBox>
     </center>
 
+    <!-- RIGHT: ENEMY TEAM -->
     <right>
         <VBox spacing="20">
             <padding>
@@ -54,6 +64,7 @@
 
             <Label text="Enemy Team" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
 
+            <!-- Enemy bans -->
             <HBox spacing="5">
                 <ImageView fx:id="enemyBan1" fitWidth="40" fitHeight="40"/>
                 <ImageView fx:id="enemyBan2" fitWidth="40" fitHeight="40"/>
@@ -62,18 +73,13 @@
                 <ImageView fx:id="enemyBan5" fitWidth="40" fitHeight="40"/>
             </HBox>
 
+            <!-- Enemy picks -->
             <VBox spacing="10">
                 <ImageView fx:id="enemyPick1" fitWidth="80" fitHeight="80"/>
                 <ImageView fx:id="enemyPick2" fitWidth="80" fitHeight="80"/>
                 <ImageView fx:id="enemyPick3" fitWidth="80" fitHeight="80"/>
                 <ImageView fx:id="enemyPick4" fitWidth="80" fitHeight="80"/>
                 <ImageView fx:id="enemyPick5" fitWidth="80" fitHeight="80"/>
-            </VBox>
-
-            <VBox spacing="10">
-                <Label text="Recommended Picks"
-                       style="-fx-font-size: 16; -fx-font-weight: bold;"/>
-                <ListView fx:id="recommendedList" prefHeight="250" prefWidth="250"/>
             </VBox>
         </VBox>
     </right>
