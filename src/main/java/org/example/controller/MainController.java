@@ -14,7 +14,7 @@ public class MainController {
     @FXML private Button themeToggleButton;
     @FXML private StackPane contentArea;
 
-    private boolean darkMode = true; // start in DARK MODE
+    private boolean darkMode = true;
 
     @FXML
     public void initialize() {

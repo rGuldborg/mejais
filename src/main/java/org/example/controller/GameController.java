@@ -9,35 +9,28 @@ import java.util.Objects;
 
 public class GameController {
 
-    // Ally
     @FXML private ImageView allyBan1, allyBan2, allyBan3, allyBan4, allyBan5;
     @FXML private ImageView allyPick1, allyPick2, allyPick3, allyPick4, allyPick5;
 
-    // Enemy
     @FXML private ImageView enemyBan1, enemyBan2, enemyBan3, enemyBan4, enemyBan5;
     @FXML private ImageView enemyPick1, enemyPick2, enemyPick3, enemyPick4, enemyPick5;
 
-    // Map
     @FXML private ImageView mapView;
 
-    // Recommended picks
     @FXML private ListView<String> recommendedList;
 
     @FXML
     public void initialize() {
         System.out.println("[GameController] Loaded game-view!");
 
-        // Load map image
         mapView.setImage(loadImage("map.png"));
 
-        // Dummy load (we replace with LCU API later)
         loadDummyData();
     }
 
     private void loadDummyData() {
         Image dummy = loadImage("placeholder.png");
 
-        // ally
         allyBan1.setImage(dummy);
         allyBan2.setImage(dummy);
         allyBan3.setImage(dummy);
@@ -63,7 +56,6 @@ public class GameController {
         enemyPick4.setImage(dummy);
         enemyPick5.setImage(dummy);
 
-        // recommended picks
         recommendedList.getItems().addAll(
                 "Anivia — S+ (OP)",
                 "Rell — A (Synergy)",

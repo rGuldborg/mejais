@@ -1,10 +1,8 @@
-/* light.css – PERFEKT MATCH TIL DIN DARK.CSS */
 .root {
     -fx-background-color: #f5f5f5;
     -fx-text-fill: #222222;
 }
 
-/* Topbar og footer – lidt mørkere end baggrunden så det skiller sig ud */
 .topbar {
     -fx-background-color: #e0e0e0;
 }
@@ -12,30 +10,27 @@
     -fx-background-color: #e0e0e0;
 }
 
-/* Knapper – samme padding som i dark mode (så højden er identisk!) */
 .button {
     -fx-background-color: #ffffff;
     -fx-text-fill: #333333;
     -fx-border-color: #cccccc;
     -fx-border-radius: 6;
     -fx-background-radius: 6;
-    -fx-padding: 8 16 8 16;           /* SAMME SOM I DARK – INGEN HØJDEFORSKYDNING */
+    -fx-padding: 8 16 8 16;
     -fx-font-size: 13px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
 }
 
-/* TextField – præcis samme højde og padding som i dark mode */
 .text-field {
     -fx-background-color: #ffffff;
     -fx-text-fill: #222222;
     -fx-border-color: #cccccc;
     -fx-background-radius: 6;
     -fx-border-radius: 6;
-    -fx-padding: 8;                   /* IDENTISK MED DARK */
+    -fx-padding: 8;
     -fx-font-size: 13px;
 }
 
-/* Hover & focus effekter – pænt og konsistent */
 .button:hover {
     -fx-background-color: #f0f0f0;
 }
