@@ -7,40 +7,36 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.controller.MainController">
 
-    <!-- ========== TOP BAR – DENNE VIRKER ALTID ========== -->
+    <!-- ========== TOP BAR ========== -->
     <top>
-        <HBox alignment="CENTER" minHeight="80" style="-fx-background-color: #2c2c2c;">
+        <VBox spacing="10" styleClass="topbar">
             <padding>
-                <Insets top="12" right="20" bottom="12" left="20"/>
+                <Insets top="10" right="20" bottom="12" left="20"/>
             </padding>
 
-            <!-- Tomt space til venstre (fylder halvdelen af det frie område) -->
-            <Region HBox.hgrow="ALWAYS"/>
-
-            <!-- DET SOM SKAL STÅ PRÆCIS I MIDTEN -->
-            <VBox alignment="CENTER" spacing="8">
+            <!-- Row 1: Search centered, actions to the right -->
+            <StackPane>
                 <TextField fx:id="searchField"
                            promptText="Search champions..."
-                           prefWidth="260"/>
-                <HBox alignment="CENTER" spacing="15">
-                    <Button fx:id="gameButton" text="Game" prefWidth="100" onAction="#onGameNav"/>
-                    <Button fx:id="championsButton" text="Champions" prefWidth="100" onAction="#onChampionsNav"/>
+                           prefWidth="320"
+                           StackPane.alignment="CENTER"/>
+
+                <HBox spacing="10" alignment="CENTER_RIGHT" StackPane.alignment="CENTER_RIGHT">
+                    <Button fx:id="themeToggleButton"
+                            text="Dark"
+                            onAction="#onThemeToggle"/>
+                    <Button fx:id="refreshButton"
+                            text="Refresh"
+                            onAction="#onRefresh"/>
                 </HBox>
-            </VBox>
+            </StackPane>
 
-            <!-- Tomt space til højre (fylder også halvdelen – så bliver midten ægte centreret) -->
-            <Region HBox.hgrow="ALWAYS"/>
-
-            <!-- Knapper helt ude til højre – står nu på præcis samme højde! -->
-            <HBox spacing="12" alignment="CENTER">
-                <Button fx:id="themeToggleButton"
-                        text="Dark"
-                        onAction="#onThemeToggle"/>
-                <Button fx:id="refreshButton"
-                        text="Refresh"
-                        onAction="#onRefresh"/>
+            <!-- Row 2: Navigation sits just below the search bar -->
+            <HBox alignment="CENTER" spacing="15">
+                <Button fx:id="gameButton" text="Game" prefWidth="110" onAction="#onGameNav"/>
+                <Button fx:id="championsButton" text="Champions" prefWidth="110" onAction="#onChampionsNav"/>
             </HBox>
-        </HBox>
+        </VBox>
     </top>
 
     <!-- ========== MAIN CONTENT ========== -->
@@ -53,7 +49,7 @@
 
     <!-- ========== FOOTER ========== -->
     <bottom>
-        <HBox alignment="CENTER_LEFT">
+        <HBox alignment="CENTER_LEFT" styleClass="footer">
             <padding>
                 <Insets top="10" right="12" bottom="10" left="12"/>
             </padding>
