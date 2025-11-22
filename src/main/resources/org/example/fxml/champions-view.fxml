@@ -1,12 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 
-<StackPane xmlns="http://javafx.com/javafx"
-           xmlns:fx="http://javafx.com/fxml">
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.controller.ChampionsController"
+            fx:id="rootPane">
 
-    <Label text="Champions view coming soon..."
-           style="-fx-font-size: 26; -fx-text-fill: #888;" />
+    <top>
+        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="champion-toolbar">
+            <padding>
+                <Insets top="10" right="14" bottom="10" left="10"/>
+            </padding>
+            <Button text="← Back" onAction="#onBackClicked" styleClass="back-button"/>
+            <Label text="Champions" styleClass="champion-title"/>
+        </HBox>
+    </top>
 
-</StackPane>
+    <center>
+        <SplitPane dividerPositions="0.65">
+            <items>
+                <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+                    <content>
+                        <TilePane fx:id="championsGrid"
+                                  prefColumns="8"
+                                  hgap="12"
+                                  vgap="12"
+                                  styleClass="champion-grid">
+                            <padding>
+                                <Insets top="20" right="20" bottom="20" left="20"/>
+                            </padding>
+                        </TilePane>
+                    </content>
+                </ScrollPane>
+
+                <VBox spacing="12" styleClass="champion-detail-pane">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    <ImageView fx:id="championImageView" fitWidth="160" fitHeight="160" preserveRatio="true"/>
+                    <Label fx:id="championNameLabel" styleClass="champion-detail-name"/>
+                    <Separator/>
+                    <Label text="Matchups by Role" styleClass="champion-detail-section"/>
+                    <VBox fx:id="roleDetailsContainer" spacing="8"/>
+                </VBox>
+            </items>
+        </SplitPane>
+    </center>
+
+</BorderPane>
+

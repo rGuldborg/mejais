@@ -65,7 +65,7 @@
             <Label text="Enemy Team" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
 
             <!-- Enemy bans -->
-            <HBox spacing="5">
+            <HBox spacing="5" alignment="CENTER_RIGHT">
                 <ImageView fx:id="enemyBan1" fitWidth="40" fitHeight="40"/>
                 <ImageView fx:id="enemyBan2" fitWidth="40" fitHeight="40"/>
                 <ImageView fx:id="enemyBan3" fitWidth="40" fitHeight="40"/>
@@ -74,7 +74,7 @@
             </HBox>
 
             <!-- Enemy picks -->
-            <VBox spacing="10">
+            <VBox spacing="10" alignment="TOP_RIGHT">
                 <ImageView fx:id="enemyPick1" fitWidth="80" fitHeight="80"/>
                 <ImageView fx:id="enemyPick2" fitWidth="80" fitHeight="80"/>
                 <ImageView fx:id="enemyPick3" fitWidth="80" fitHeight="80"/>

@@ -23,7 +23,7 @@ public class GameController {
     public void initialize() {
         System.out.println("[GameController] Loaded game-view!");
 
-        mapView.setImage(loadImage("map.png"));
+        mapView.setImage(loadImage("mapfinal.png"));
 
         loadDummyData();
     }

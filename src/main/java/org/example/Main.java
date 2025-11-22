@@ -17,11 +17,9 @@ public class Main extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 1200, 1000);
         System.out.println("FXML loaded into Scene");
 
-        // Register scene
         ThemeManager.setScene(scene);
         System.out.println("Scene registered in ThemeManager");
 
-        // ⭐ Apply DARK THEME as default (det er HER problemet var!)
         ThemeManager.applyTheme("dark.css");
         System.out.println("Dark theme applied at startup");
 
