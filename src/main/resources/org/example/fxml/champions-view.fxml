@@ -11,19 +11,25 @@
             fx:id="rootPane">
 
     <top>
-        <HBox spacing="12" alignment="CENTER_LEFT" styleClass="champion-toolbar">
-            <padding>
-                <Insets top="10" right="14" bottom="10" left="10"/>
-            </padding>
-            <Button text="← Back" onAction="#onBackClicked" styleClass="back-button"/>
-            <Label text="Champions" styleClass="champion-title"/>
-        </HBox>
+        <VBox spacing="8">
+            <HBox spacing="12" alignment="CENTER_LEFT" styleClass="champion-toolbar">
+                <padding>
+                    <Insets top="10" right="14" bottom="10" left="10"/>
+                </padding>
+                <Button text="Back" onAction="#onBackClicked" styleClass="back-button"/>
+                <Label text="Champions" styleClass="champion-title"/>
+            </HBox>
+        </VBox>
     </top>
 
     <center>
         <SplitPane dividerPositions="0.65">
             <items>
-                <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+                <ScrollPane fitToWidth="true"
+                            fitToHeight="true"
+                            hbarPolicy="NEVER"
+                            vbarPolicy="AS_NEEDED"
+                            styleClass="champion-scroll">
                     <content>
                         <TilePane fx:id="championsGrid"
                                   prefColumns="8"
@@ -43,13 +49,14 @@
                     </padding>
                     <ImageView fx:id="championImageView" fitWidth="160" fitHeight="160" preserveRatio="true"/>
                     <Label fx:id="championNameLabel" styleClass="champion-detail-name"/>
+                    <Label fx:id="winRateLabel" styleClass="champion-detail-winrate"/>
+                    <HBox fx:id="detailRoleBar" spacing="6"/>
                     <Separator/>
-                    <Label text="Matchups by Role" styleClass="champion-detail-section"/>
-                    <VBox fx:id="roleDetailsContainer" spacing="8"/>
+                    <Label text="Matchups" styleClass="champion-detail-section"/>
+                    <VBox fx:id="matchupList" spacing="8"/>
                 </VBox>
             </items>
         </SplitPane>
     </center>
 
 </BorderPane>
-

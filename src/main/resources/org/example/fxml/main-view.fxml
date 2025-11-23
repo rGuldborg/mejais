@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
@@ -8,38 +11,108 @@
             fx:controller="org.example.controller.MainController">
 
     <top>
-        <VBox spacing="10" styleClass="topbar">
-            <padding>
-                <Insets top="10" right="20" bottom="12" left="20"/>
-            </padding>
+        <VBox spacing="0">
+            <BorderPane fx:id="windowHeader"
+                        styleClass="window-header"
+                        onMousePressed="#onHeaderPressed"
+                        onMouseDragged="#onHeaderDragged">
+                <left>
+                    <Label text="legends.io" styleClass="window-title" BorderPane.alignment="CENTER_LEFT"/>
+                </left>
+                <center>
+                    <HBox alignment="CENTER" spacing="4">
+                        <padding>
+                            <Insets top="6" right="0" bottom="6" left="0"/>
+                        </padding>
 
-            <!-- Row 1: Search centered, actions to the right -->
-            <StackPane>
-                <TextField fx:id="searchField"
-                           promptText="Search champions..."
-                           prefWidth="320"
-                           maxWidth="320"
-                           StackPane.alignment="CENTER"/>
+                        <!-- THEME TOGGLE BUTTON -->
+                        <Button fx:id="themeToggleButton"
+                                styleClass="window-control header-icon-button"
+                                onAction="#onThemeToggle"
+                                text="">
+                            <graphic>
+                                <StackPane prefWidth="16" prefHeight="16">
+                                    <Group fx:id="moonIcon">
+                                        <SVGPath content="M10 2 A6 6 0 1 0 14 14 A8 8 0 1 1 10 2"
+                                                 styleClass="window-icon"/>
+                                    </Group>
+                                    <Group fx:id="sunIcon" visible="false" translateX="-2">
+                                        <SVGPath content="M8 3.5 A4.5 4.5 0 1 1 8 12.5 A4.5 4.5 0 0 1 8 3.5"
+                                                 styleClass="sun-core"/>
+                                        <SVGPath content="M8 0.5 L8 2.5 M8 13.5 L8 15.5 M0.5 8 L2.5 8 M13.5 8 L15.5 8 M2.3 2.3 L3.7 3.7 M12.3 12.3 L13.7 13.7 M2.3 13.7 L3.7 12.3 M12.3 3.7 L13.7 2.3"
+                                                 styleClass="sun-ray"/>
+                                    </Group>
+                                </StackPane>
+                            </graphic>
+                        </Button>
 
-                <HBox spacing="10" alignment="CENTER_RIGHT" StackPane.alignment="CENTER_RIGHT">
-                    <Button fx:id="themeToggleButton"
-                            text="Dark"
-                            onAction="#onThemeToggle"/>
-                    <Button fx:id="refreshButton"
-                            text="Refresh"
-                            onAction="#onRefresh"/>
+                        <TextField fx:id="searchField"
+                                   promptText="Search champions..."
+                                   prefWidth="320"
+                                   maxWidth="320"/>
+
+                        <!-- REFRESH BUTTON -->
+                        <Button fx:id="refreshButton"
+                                styleClass="window-control header-icon-button"
+                                onAction="#onRefresh">
+                            <graphic>
+                                <Group>
+                                    <SVGPath content="M8 1 A7 7 0 1 1 1 8"
+                                             styleClass="window-icon"/>
+                                    <SVGPath content="M1 8 L1 5 L3 5"
+                                             styleClass="window-icon"/>
+                                </Group>
+                            </graphic>
+                        </Button>
+                    </HBox>
+                </center>
+
+                <right>
+                    <HBox spacing="8" alignment="CENTER_RIGHT">
+                        <padding>
+                            <Insets top="4" right="4" bottom="4" left="4"/>
+                        </padding>
+
+                        <Button fx:id="minimizeButton"
+                                onAction="#onMinimize"
+                                styleClass="window-control text-button window-minimize">
+                            <graphic>
+                                <SVGPath content="M2 8 H14" styleClass="window-icon"/>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="maximizeButton"
+                                onAction="#onMaximize"
+                                styleClass="window-control text-button window-maximize">
+                            <graphic>
+                                <SVGPath content="M3 3 H13 V13 H3 Z" styleClass="window-icon"/>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="closeButton"
+                                onAction="#onClose"
+                                styleClass="window-control text-button window-close">
+                            <graphic>
+                                <SVGPath content="M3 3 L13 13 M3 13 L13 3" styleClass="window-icon"/>
+                            </graphic>
+                        </Button>
+                    </HBox>
+                </right>
+            </BorderPane>
+
+            <VBox spacing="10" styleClass="topbar">
+                <padding>
+                    <Insets top="10" right="20" bottom="12" left="20"/>
+                </padding>
+
+                <!-- Navigation row -->
+                <HBox alignment="CENTER" spacing="15">
+                    <Button fx:id="gameButton" text="Game" onAction="#onGameNav" styleClass="flat-button nav-button text-button"/>
+                    <Button fx:id="championsButton" text="Champions" onAction="#onChampionsNav" styleClass="flat-button nav-button text-button"/>
                 </HBox>
-            </StackPane>
-
-            <!-- Row 2: Navigation sits just below the search bar -->
-            <HBox alignment="CENTER" spacing="15">
-                <Button fx:id="gameButton" text="Game" prefWidth="110" onAction="#onGameNav"/>
-                <Button fx:id="championsButton" text="Champions" prefWidth="110" onAction="#onChampionsNav"/>
-            </HBox>
+            </VBox>
         </VBox>
     </top>
 
-    <!-- ========== MAIN CONTENT ========== -->
+    <!-- MAIN CONTENT -->
     <center>
         <StackPane fx:id="contentArea">
             <Label text="Select a view above."
@@ -47,7 +120,7 @@
         </StackPane>
     </center>
 
-    <!-- ========== FOOTER ========== -->
+    <!-- FOOTER -->
     <bottom>
         <HBox alignment="CENTER_LEFT" styleClass="footer">
             <padding>

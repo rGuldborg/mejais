@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
@@ -14,7 +15,7 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/org/example/fxml/main-view.fxml"));
 
         System.out.println("Loading FXML: /org/example/fxml/main-view.fxml");
-        Scene scene = new Scene(fxmlLoader.load(), 1200, 1000);
+        Scene scene = new Scene(fxmlLoader.load(), 1400, 1000);
         System.out.println("FXML loaded into Scene");
 
         ThemeManager.setScene(scene);
@@ -23,6 +24,7 @@ public class Main extends Application {
         ThemeManager.applyTheme("dark.css");
         System.out.println("Dark theme applied at startup");
 
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle("League Assistant FX");
         stage.setScene(scene);
         stage.show();

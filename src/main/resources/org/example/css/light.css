@@ -1,30 +1,186 @@
 .root {
-    -fx-background-color: #f5f5f5;
-    -fx-text-fill: #222222;
+    -fx-background-color: #eef6ff;
+    -fx-text-fill: #0f2a4d;
 }
 
 .topbar {
-    -fx-background-color: #e0e0e0;
+    -fx-background-color: #d9eaff;
 }
 .footer {
-    -fx-background-color: #e0e0e0;
+    -fx-background-color: #d9eaff;
+}
+
+.window-header {
+    -fx-background-color: #d9eaff;
+    -fx-padding: 8 14 8 14;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.window-title {
+    -fx-text-fill: #0f2a4d;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.5px;
+}
+
+.window-control {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 0;
+    -fx-min-width: 0;
+    -fx-min-height: 0;
+    -fx-cursor: hand;
 }
 
 .button {
     -fx-background-color: #ffffff;
-    -fx-text-fill: #333333;
-    -fx-border-color: #cccccc;
+    -fx-text-fill: #0f2a4d;
+    -fx-border-color: #c5dbff;
     -fx-border-radius: 6;
     -fx-background-radius: 6;
     -fx-padding: 8 16 8 16;
     -fx-font-size: 13px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
+    -fx-effect: dropshadow(gaussian, rgba(15,42,77,0.08), 4, 0, 0, 2);
+}
+
+.button.flat-button,
+.button.text-button,
+.button.window-control,
+.header-icon-button {
+    -fx-background-color: transparent !important;
+    -fx-border-color: transparent !important;
+    -fx-border-width: 0 !important;
+    -fx-background-insets: 0 !important;
+    -fx-border-insets: 0 !important;
+    -fx-border-radius: 0 !important;
+    -fx-background-radius: 0 !important;
+    -fx-padding: 0 4 !important;
+    -fx-font-size: 13px;
+    -fx-effect: none;
+    -fx-cursor: hand;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* Force header/topbar buttons (window controls, refresh, theme toggle, nav) to be text/icon only */
+.window-header Button,
+.topbar Button {
+    -fx-background-color: transparent !important;
+    -fx-border-color: transparent !important;
+    -fx-background-insets: 0 !important;
+    -fx-border-insets: 0 !important;
+    -fx-background-radius: 0 !important;
+    -fx-border-radius: 0 !important;
+    -fx-padding: 0 4 !important;
+    -fx-min-width: 0 !important;
+    -fx-min-height: 0 !important;
+    -fx-effect: null !important;
+}
+
+.button.window-control {
+    -fx-text-fill: #0f2a4d;
+    -fx-font-size: 12px;
+    -fx-padding: 0 4;
+}
+
+.button.window-control:hover,
+.button.window-control:pressed,
+.button.window-control:armed,
+.button.window-control:focused {
+    -fx-text-fill: #1f5fbf;
+}
+
+.button.window-close:hover,
+.button.window-close:pressed,
+.button.window-close:armed {
+    -fx-text-fill: #ff6b6b;
+}
+
+.header-icon-button {
+    -fx-padding: 0 4;
+    -fx-min-width: 0;
+    -fx-min-height: 0;
+}
+
+/* Strip chrome from header/nav buttons so only icon/text is visible */
+Button.window-control,
+Button.header-icon-button,
+Button.nav-button,
+Button.text-button,
+Button.flat-button {
+    -fx-background-color: transparent !important;
+    -fx-border-color: transparent !important;
+    -fx-background-insets: 0 !important;
+    -fx-border-insets: 0 !important;
+    -fx-background-radius: 0 !important;
+    -fx-border-radius: 0 !important;
+    -fx-padding: 0 4 !important;
+    -fx-min-width: 0 !important;
+    -fx-min-height: 0 !important;
+    -fx-effect: null !important;
+}
+
+Button.window-control:hover,
+Button.window-control:pressed,
+Button.window-control:armed,
+Button.window-control:focused,
+Button.header-icon-button:hover,
+Button.header-icon-button:pressed,
+Button.header-icon-button:armed,
+Button.header-icon-button:focused,
+Button.nav-button:hover,
+Button.nav-button:pressed,
+Button.nav-button:armed,
+Button.nav-button:focused,
+Button.text-button:hover,
+Button.text-button:pressed,
+Button.text-button:armed,
+Button.text-button:focused,
+Button.flat-button:hover,
+Button.flat-button:pressed,
+Button.flat-button:armed,
+Button.flat-button:focused {
+    -fx-background-color: transparent !important;
+    -fx-border-color: transparent !important;
+    -fx-effect: null !important;
+}
+
+.window-icon,
+.header-icon {
+    -fx-stroke: #0f2a4d;
+    -fx-stroke-width: 1.6;
+    -fx-fill: transparent;
+}
+
+.thin-stroke {
+    -fx-stroke-width: 1;
+}
+
+Button.flat-button:hover,
+Button.flat-button:pressed,
+Button.flat-button:armed,
+Button.flat-button:focused,
+Button.text-button:hover,
+Button.text-button:pressed,
+Button.text-button:armed,
+Button.text-button:focused {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: #1f5fbf;
+}
+
+.nav-button {
+    -fx-font-weight: bold;
 }
 
 .text-field {
     -fx-background-color: #ffffff;
-    -fx-text-fill: #222222;
-    -fx-border-color: #cccccc;
+    -fx-text-fill: #0f2a4d;
+    -fx-border-color: #b7d3ff;
     -fx-background-radius: 6;
     -fx-border-radius: 6;
     -fx-padding: 8;
@@ -32,26 +188,26 @@
 }
 
 .button:hover {
-    -fx-background-color: #f0f0f0;
+    -fx-background-color: #f5f9ff;
 }
 
 .button:pressed {
-    -fx-background-color: #e0e0e0;
+    -fx-background-color: #e6f0ff;
 }
 
 .text-field:focused {
-    -fx-border-color: #3399ff;
-    -fx-effect: innershadow(gaussian, rgba(51,153,255,0.3), 4, 0, 0, 0);
+    -fx-border-color: #4c8dff;
+    -fx-effect: innershadow(gaussian, rgba(76,141,255,0.25), 4, 0, 0, 0);
 }
 
 .champion-toolbar {
-    -fx-background-color: #eeeeee;
+    -fx-background-color: #e7f1ff;
 }
 
 .back-button {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-    -fx-text-fill: #333333;
+    -fx-text-fill: #0f2a4d;
     -fx-font-size: 14px;
     -fx-padding: 6 12 6 12;
 }
@@ -60,42 +216,201 @@
     -fx-background-color: transparent;
 }
 
+.champion-scroll {
+    -fx-background-color: transparent;
+}
+
+.champion-scroll > .viewport {
+    -fx-background-color: #f3f6fb;
+}
+
 .champion-card {
     -fx-alignment: center;
     -fx-padding: 10;
     -fx-background-color: #ffffff;
-    -fx-border-color: #dcdcdc;
+    -fx-border-color: #cde0ff;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(15,42,77,0.06), 4, 0, 0, 2);
 }
 
 .champion-card:hover {
-    -fx-background-color: #fdfdfd;
+    -fx-background-color: #f7fbff;
 }
 
 .champion-card-name {
-    -fx-text-fill: #333333;
+    -fx-text-fill: #0f2a4d;
     -fx-font-size: 12px;
     -fx-text-alignment: center;
 }
 
+.search-suggestion-item {
+    -fx-padding: 6 12;
+    -fx-text-fill: #0f2a4d;
+    -fx-font-size: 13px;
+}
+
 .champion-detail-pane {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #dcdcdc;
+    -fx-background-color: #f6f9ff;
+    -fx-border-color: #cde0ff;
     -fx-border-width: 0 0 0 1;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 4, 0, -2, 0);
+    -fx-effect: dropshadow(gaussian, rgba(15,42,77,0.05), 4, 0, -2, 0);
 }
 
 .champion-detail-name {
-    -fx-text-fill: #222222;
+    -fx-text-fill: #0f2a4d;
     -fx-font-size: 18px;
     -fx-font-weight: bold;
 }
 
 .champion-detail-section {
-    -fx-text-fill: #666666;
+    -fx-text-fill: #2c5c9b;
     -fx-font-size: 13px;
     -fx-font-weight: bold;
+}
+
+/* Sun icon styling */
+.sun-core {
+    -fx-stroke: #0f2a4d;
+    -fx-fill: transparent !important;
+    -fx-stroke-width: 1.2;
+}
+
+.sun-ray {
+    -fx-stroke: #0f2a4d;
+    -fx-stroke-width: 2;
+    -fx-stroke-line-cap: round;
+    -fx-fill: transparent;
+}
+
+.game-view-root .label {
+    -fx-text-fill: #0f2a4d;
+}
+
+.recommendations-table {
+    -fx-background-color: #f4f8ff;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+    -fx-control-inner-background: #f4f8ff;
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-padding: 6 8;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.recommendations-table .column-header,
+.recommendations-table .filler {
+    -fx-background-color: #e3eeff;
+    -fx-border-color: transparent;
+}
+
+.recommendations-table .column-header .label {
+    -fx-text-fill: #0f2a4d;
+    -fx-font-weight: bold;
+}
+
+.recommendations-table .table-row-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 6 10;
+    -fx-cell-size: 52;
+}
+
+.recommendations-table .table-row-cell:odd {
+    -fx-background-color: #eef4ff;
+}
+
+.recommendations-table .table-row-cell:selected {
+    -fx-background-color: #d4e5ff;
+}
+
+.recommendations-table .table-cell {
+    -fx-text-fill: #0f2a4d;
+    -fx-border-color: transparent;
+    -fx-padding: 6 10;
+}
+
+.recommendations-table .scroll-bar,
+.recommendations-table .scroll-bar .increment-button,
+.recommendations-table .scroll-bar .decrement-button,
+.recommendations-table .scroll-bar .thumb,
+.recommendations-table .scroll-bar .track {
+    -fx-opacity: 0;
+    -fx-padding: 0;
+    -fx-max-width: 0;
+    -fx-max-height: 0;
+}
+
+.recommendation-name {
+    -fx-fill: #0f2a4d;
+}
+
+.champion-detail-winrate {
+    -fx-text-fill: #174b8c;
+    -fx-font-size: 14px;
+}
+
+.matchup-row {
+    -fx-alignment: center-left;
+    -fx-spacing: 10;
+}
+
+.matchup-positive {
+    -fx-text-fill: #1f8a5d;
+}
+
+.matchup-negative {
+    -fx-text-fill: #c74242;
+}
+
+.search-suggestions {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #bcd3ff;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
+.search-suggestions .list-cell {
+    -fx-text-fill: #0f2a4d;
+    -fx-padding: 4 8;
+}
+
+.search-suggestions .list-cell:filled:hover,
+.search-suggestions .list-cell:selected {
+    -fx-background-color: #e3efff;
+}
+
+.role-chip {
+    -fx-padding: 4;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-width: 1;
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(15, 42, 77, 0.2);
+    -fx-opacity: 0.55;
+    -fx-cursor: hand;
+    -fx-alignment: center;
+}
+
+.role-chip.ally {
+    -fx-border-color: rgba(57, 134, 255, 0.35);
+}
+
+.role-chip.enemy {
+    -fx-border-color: rgba(255, 117, 117, 0.35);
+}
+
+.role-chip.role-chip-active,
+.role-chip.role-chip-active.ally {
+    -fx-opacity: 1;
+    -fx-background-color: rgba(57, 134, 255, 0.25);
+    -fx-border-color: #2781ff;
+    -fx-effect: dropshadow(gaussian, rgba(39, 129, 255, 0.4), 10, 0, 0, 0);
+}
+
+.role-chip.role-chip-active.enemy {
+    -fx-background-color: rgba(255, 117, 117, 0.25);
+    -fx-border-color: #ff7575;
+    -fx-effect: dropshadow(gaussian, rgba(255, 117, 117, 0.4), 10, 0, 0, 0);
 }

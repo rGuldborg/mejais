@@ -4,82 +4,133 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.StackPane?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.controller.GameController"
-            prefWidth="1200" prefHeight="800">
+            prefWidth="1200" prefHeight="800"
+            styleClass="game-view-root">
 
     <left>
-        <VBox spacing="20">
+        <VBox spacing="16">
             <padding>
-                <Insets top="20" right="10" bottom="20" left="20"/>
+                <Insets top="20" right="10" bottom="20" left="12"/>
             </padding>
 
             <Label text="Your Team" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
 
-            <HBox spacing="5">
-                <ImageView fx:id="allyBan1" fitWidth="40" fitHeight="40"/>
-                <ImageView fx:id="allyBan2" fitWidth="40" fitHeight="40"/>
-                <ImageView fx:id="allyBan3" fitWidth="40" fitHeight="40"/>
-                <ImageView fx:id="allyBan4" fitWidth="40" fitHeight="40"/>
-                <ImageView fx:id="allyBan5" fitWidth="40" fitHeight="40"/>
-            </HBox>
+            <Label text="Bans" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+            <FlowPane hgap="10" vgap="14">
+                <ImageView fx:id="allyBan1" fitWidth="48" fitHeight="48"/>
+                <ImageView fx:id="allyBan2" fitWidth="48" fitHeight="48"/>
+                <ImageView fx:id="allyBan3" fitWidth="48" fitHeight="48"/>
+                <ImageView fx:id="allyBan4" fitWidth="48" fitHeight="48"/>
+                <ImageView fx:id="allyBan5" fitWidth="48" fitHeight="48"/>
+            </FlowPane>
 
-            <VBox spacing="10">
-                <ImageView fx:id="allyPick1" fitWidth="80" fitHeight="80"/>
-                <ImageView fx:id="allyPick2" fitWidth="80" fitHeight="80"/>
-                <ImageView fx:id="allyPick3" fitWidth="80" fitHeight="80"/>
-                <ImageView fx:id="allyPick4" fitWidth="80" fitHeight="80"/>
-                <ImageView fx:id="allyPick5" fitWidth="80" fitHeight="80"/>
+            <Label text="Picks" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+            <VBox spacing="14">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ImageView fx:id="allyPick1" fitWidth="78" fitHeight="78"/>
+                    <HBox fx:id="allyRoleRow1" spacing="4"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ImageView fx:id="allyPick2" fitWidth="78" fitHeight="78"/>
+                    <HBox fx:id="allyRoleRow2" spacing="4"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ImageView fx:id="allyPick3" fitWidth="78" fitHeight="78"/>
+                    <HBox fx:id="allyRoleRow3" spacing="4"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ImageView fx:id="allyPick4" fitWidth="78" fitHeight="78"/>
+                    <HBox fx:id="allyRoleRow4" spacing="4"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ImageView fx:id="allyPick5" fitWidth="78" fitHeight="78"/>
+                    <HBox fx:id="allyRoleRow5" spacing="4"/>
+                </HBox>
             </VBox>
         </VBox>
     </left>
 
-    <!-- CENTER: MAP + RECOMMENDED PICKS BELOW -->
+    <!-- CENTER: RECOMMENDED PICKS -->
     <center>
-        <VBox spacing="16">
+        <VBox spacing="12">
             <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
+                <Insets top="20" right="12" bottom="20" left="12"/>
             </padding>
 
-            <StackPane>
-                <ImageView fx:id="mapView" fitWidth="550" preserveRatio="true"/>
-            </StackPane>
-
-            <VBox spacing="10">
-                <Label text="Recommended Picks"
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="Recommendation Board"
                        style="-fx-font-size: 16; -fx-font-weight: bold;"/>
-                <ListView fx:id="recommendedList" prefHeight="220" prefWidth="320"/>
-            </VBox>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button text="Clear Selections" onAction="#onClearSelections"/>
+            </HBox>
+            <Label text="Click a slot on either side, then double-click a champion below to place it. Double-click a slot to clear."
+                   style="-fx-font-size: 12; -fx-text-fill: -fx-text-base-color;" />
+            <Label fx:id="selectionStatusLabel"
+                   text="Select a slot to begin."
+                   style="-fx-font-size: 13; -fx-text-fill: -fx-accent;" />
+
+            <TableView fx:id="recommendedTable"
+                       prefHeight="600"
+                       styleClass="recommendations-table">
+                <columns>
+                    <TableColumn fx:id="championCol" text="Champion" prefWidth="240"/>
+                    <TableColumn fx:id="opCol" text="OP" prefWidth="80"/>
+                    <TableColumn fx:id="synCol" text="SYN" prefWidth="80"/>
+                    <TableColumn fx:id="coCol" text="CO" prefWidth="80"/>
+                    <TableColumn fx:id="scoreCol" text="Score" prefWidth="120"/>
+                </columns>
+            </TableView>
         </VBox>
     </center>
 
     <!-- RIGHT: ENEMY TEAM -->
     <right>
-        <VBox spacing="20">
+        <VBox spacing="16" alignment="TOP_RIGHT">
             <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
+                <Insets top="20" right="12" bottom="20" left="4"/>
             </padding>
 
-            <Label text="Enemy Team" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+            <Label text="Enemy Team" style="-fx-font-size: 18; -fx-font-weight: bold;"
+                   alignment="CENTER_RIGHT" textAlignment="RIGHT" maxWidth="Infinity"/>
 
-            <!-- Enemy bans -->
-            <HBox spacing="5" alignment="CENTER_RIGHT">
-                <ImageView fx:id="enemyBan1" fitWidth="40" fitHeight="40"/>
-                <ImageView fx:id="enemyBan2" fitWidth="40" fitHeight="40"/>
-                <ImageView fx:id="enemyBan3" fitWidth="40" fitHeight="40"/>
-                <ImageView fx:id="enemyBan4" fitWidth="40" fitHeight="40"/>
-                <ImageView fx:id="enemyBan5" fitWidth="40" fitHeight="40"/>
-            </HBox>
+            <Label text="Bans" style="-fx-font-size: 14; -fx-font-weight: bold;"
+                   alignment="CENTER_RIGHT" textAlignment="RIGHT" maxWidth="Infinity"/>
+            <FlowPane hgap="10" vgap="14" alignment="CENTER_RIGHT">
+                <ImageView fx:id="enemyBan1" fitWidth="48" fitHeight="48"/>
+                <ImageView fx:id="enemyBan2" fitWidth="48" fitHeight="48"/>
+                <ImageView fx:id="enemyBan3" fitWidth="48" fitHeight="48"/>
+                <ImageView fx:id="enemyBan4" fitWidth="48" fitHeight="48"/>
+                <ImageView fx:id="enemyBan5" fitWidth="48" fitHeight="48"/>
+            </FlowPane>
 
-            <!-- Enemy picks -->
-            <VBox spacing="10" alignment="TOP_RIGHT">
-                <ImageView fx:id="enemyPick1" fitWidth="80" fitHeight="80"/>
-                <ImageView fx:id="enemyPick2" fitWidth="80" fitHeight="80"/>
-                <ImageView fx:id="enemyPick3" fitWidth="80" fitHeight="80"/>
-                <ImageView fx:id="enemyPick4" fitWidth="80" fitHeight="80"/>
-                <ImageView fx:id="enemyPick5" fitWidth="80" fitHeight="80"/>
+            <Label text="Picks" style="-fx-font-size: 14; -fx-font-weight: bold;"
+                   alignment="CENTER_RIGHT" textAlignment="RIGHT" maxWidth="Infinity"/>
+            <VBox spacing="14" alignment="TOP_RIGHT">
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <HBox fx:id="enemyRoleRow1" spacing="4"/>
+                    <ImageView fx:id="enemyPick1" fitWidth="78" fitHeight="78"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <HBox fx:id="enemyRoleRow2" spacing="4"/>
+                    <ImageView fx:id="enemyPick2" fitWidth="78" fitHeight="78"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <HBox fx:id="enemyRoleRow3" spacing="4"/>
+                    <ImageView fx:id="enemyPick3" fitWidth="78" fitHeight="78"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <HBox fx:id="enemyRoleRow4" spacing="4"/>
+                    <ImageView fx:id="enemyPick4" fitWidth="78" fitHeight="78"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <HBox fx:id="enemyRoleRow5" spacing="4"/>
+                    <ImageView fx:id="enemyPick5" fitWidth="78" fitHeight="78"/>
+                </HBox>
             </VBox>
         </VBox>
     </right>
