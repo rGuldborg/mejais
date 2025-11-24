@@ -47,24 +47,51 @@
             <StackPane styleClass="champion-pane detail-pane"
                        GridPane.columnIndex="1" GridPane.rowIndex="0"
                        GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                <VBox spacing="12" styleClass="champion-detail-pane">
+                <VBox spacing="12" styleClass="champion-detail-pane" alignment="TOP_CENTER">
                     <padding>
                         <Insets top="20" right="20" bottom="20" left="20"/>
                     </padding>
                     <ImageView fx:id="championImageView" fitWidth="160" fitHeight="160" preserveRatio="true"/>
-                    <Label fx:id="championNameLabel" styleClass="champion-detail-name"/>
-                    <Label fx:id="winRateLabel" styleClass="champion-detail-winrate"/>
-                    <HBox fx:id="detailRoleBar" spacing="6"/>
+                    <Label fx:id="championNameLabel"
+                           styleClass="champion-detail-name"
+                           alignment="CENTER"
+                           textAlignment="CENTER"
+                           maxWidth="Infinity"/>
+                    <Label fx:id="winRateLabel"
+                           styleClass="champion-detail-winrate"
+                           alignment="CENTER"
+                           textAlignment="CENTER"
+                           maxWidth="Infinity"/>
+                    <HBox fx:id="detailRoleBar" spacing="6" alignment="CENTER"/>
                     <Separator/>
-                    <Label text="Matchups" styleClass="champion-detail-section"/>
-                    <HBox spacing="16" styleClass="matchup-columns">
-                        <VBox spacing="8" HBox.hgrow="ALWAYS" styleClass="matchup-column">
-                            <Label text="Favorable" styleClass="matchup-column-title"/>
-                            <VBox fx:id="favorableMatchups" spacing="6"/>
+                    <Label text="Matchups"
+                           styleClass="champion-detail-section"
+                           alignment="CENTER"
+                           textAlignment="CENTER"
+                           maxWidth="Infinity">
+                        <VBox.margin>
+                            <Insets top="6"/>
+                        </VBox.margin>
+                    </Label>
+                    <HBox spacing="16" styleClass="matchup-columns" alignment="TOP_CENTER">
+                        <VBox.margin>
+                            <Insets top="10"/>
+                        </VBox.margin>
+                        <VBox spacing="8" HBox.hgrow="ALWAYS" alignment="TOP_CENTER" styleClass="matchup-column">
+                            <Label text="Favorable"
+                                   styleClass="matchup-column-title"
+                                   alignment="CENTER"
+                                   textAlignment="CENTER"
+                                   maxWidth="Infinity"/>
+                            <VBox fx:id="favorableMatchups" spacing="6" alignment="TOP_CENTER" fillWidth="false"/>
                         </VBox>
-                        <VBox spacing="8" HBox.hgrow="ALWAYS" styleClass="matchup-column">
-                            <Label text="Challenging" styleClass="matchup-column-title"/>
-                            <VBox fx:id="challengingMatchups" spacing="6"/>
+                        <VBox spacing="8" HBox.hgrow="ALWAYS" alignment="TOP_CENTER" styleClass="matchup-column">
+                            <Label text="Challenging"
+                                   styleClass="matchup-column-title"
+                                   alignment="CENTER"
+                                   textAlignment="CENTER"
+                                   maxWidth="Infinity"/>
+                            <VBox fx:id="challengingMatchups" spacing="6" alignment="TOP_CENTER" fillWidth="false"/>
                         </VBox>
                     </HBox>
                 </VBox>

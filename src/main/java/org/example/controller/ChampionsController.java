@@ -22,6 +22,7 @@ import org.example.service.MockStatsService;
 import org.example.service.RiotStatsService;
 import org.example.service.StatsService;
 import org.example.util.ChampionIconResolver;
+import org.example.util.ChampionNames;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -73,6 +74,11 @@ public class ChampionsController {
     private ChangeListener<Boolean> focusListener;
     private final ContextMenu suggestionPopup = new ContextMenu();
     private final Consumer<ThemeManager.Theme> themeListener = theme -> Platform.runLater(this::refreshRoleIcons);
+
+    public ChampionsController() {
+        suggestionPopup.getStyleClass().add("search-suggestions");
+    }
+    private Runnable showViewRequest;
 
     @FXML
     public void initialize() {
@@ -135,7 +141,7 @@ public class ChampionsController {
         }
         String lowered = text.toLowerCase();
         List<String> matches = championInfos.stream()
-                .map(ChampionInfo::name)
+                .map(ChampionInfo::displayName)
                 .filter(name -> name.toLowerCase().contains(lowered))
                 .sorted()
                 .limit(5)
@@ -145,9 +151,8 @@ public class ChampionsController {
             return;
         }
         matches.forEach(match -> {
-            Label label = new Label(match);
-            label.getStyleClass().add("search-suggestion-item");
-            CustomMenuItem item = new CustomMenuItem(label, true);
+            HBox row = suggestionRow(match);
+            CustomMenuItem item = new CustomMenuItem(row, true);
             item.setOnAction(e -> selectSuggestion(match));
             suggestionPopup.getItems().add(item);
         });
@@ -170,6 +175,7 @@ public class ChampionsController {
         ChampionInfo info = championIndex.get(name);
         if (info != null) {
             showChampionDetails(info);
+            requestShowView();
         }
         if (boundSearchField != null) {
             boundSearchField.clear();
@@ -178,6 +184,32 @@ public class ChampionsController {
             }
         }
         suggestionPopup.hide();
+    }
+
+    private HBox suggestionRow(String displayName) {
+        ChampionInfo info = championIndex.get(displayName);
+        String canonical = info != null ? info.id() : ChampionNames.canonicalName(displayName);
+        String fallback = canonical != null ? canonical : displayName;
+        HBox box = new HBox(8);
+        box.getStyleClass().add("search-suggestion-item");
+        ImageView icon = new ImageView(ChampionIconResolver.load(fallback));
+        icon.setFitWidth(24);
+        icon.setFitHeight(24);
+        icon.setPreserveRatio(true);
+        Label label = new Label(displayName);
+        label.getStyleClass().add("search-suggestion-label");
+        box.getChildren().addAll(icon, label);
+        return box;
+    }
+
+    public void setShowViewRequest(Runnable showViewRequest) {
+        this.showViewRequest = showViewRequest;
+    }
+
+    private void requestShowView() {
+        if (showViewRequest != null) {
+            showViewRequest.run();
+        }
     }
 
     private void loadChampionInfos() {
@@ -190,10 +222,11 @@ public class ChampionsController {
             championStats.entrySet().stream()
                     .sorted(Entry.comparingByKey(String.CASE_INSENSITIVE_ORDER))
                     .forEach(entry -> {
-                        ChampionInfo info = new ChampionInfo(entry.getKey());
+                        String id = entry.getKey();
+                        ChampionInfo info = new ChampionInfo(id, ChampionNames.displayName(id));
                         championInfos.add(info);
-                        championIndex.put(entry.getKey(), info);
-                        statsIndex.put(entry.getKey(), entry.getValue());
+                        championIndex.put(info.displayName(), info);
+                        statsIndex.put(id, entry.getValue());
                     });
             return;
         }
@@ -212,10 +245,12 @@ public class ChampionsController {
                 stream.filter(Files::isRegularFile)
                         .sorted(Comparator.comparing(path -> path.getFileName().toString(), String.CASE_INSENSITIVE_ORDER))
                         .forEach(path -> {
-                            String name = beautifyName(path.getFileName().toString());
-                            ChampionInfo info = new ChampionInfo(name);
+                            String base = path.getFileName().toString();
+                            String canonical = extractCanonical(base);
+                            String display = ChampionNames.displayName(canonical);
+                            ChampionInfo info = new ChampionInfo(canonical, display);
                             championInfos.add(info);
-                            championIndex.put(name, info);
+                            championIndex.put(display, info);
                         });
             }
         } catch (URISyntaxException | IOException e) {
@@ -237,9 +272,9 @@ public class ChampionsController {
         avatar.setFitHeight(72);
         avatar.setPreserveRatio(true);
         avatar.setSmooth(true);
-        avatar.setImage(ChampionIconResolver.load(champion.name()));
+        avatar.setImage(ChampionIconResolver.load(champion.id()));
 
-        Label name = new Label(champion.name());
+        Label name = new Label(champion.displayName());
         name.getStyleClass().add("champion-card-name");
 
         VBox box = new VBox(6, avatar, name);
@@ -250,17 +285,17 @@ public class ChampionsController {
 
     private void showChampionDetails(ChampionInfo champion) {
         currentChampion = champion;
-        championNameLabel.setText(champion.name());
-        championImageView.setImage(ChampionIconResolver.load(champion.name()));
+        championNameLabel.setText(champion.displayName());
+        championImageView.setImage(ChampionIconResolver.load(champion.id()));
 
         currentStats = null;
         currentWinRate = 0.0;
         resetWinRateStyling();
 
-        Optional<ChampionStats> statsOpt = Optional.ofNullable(statsIndex.get(champion.name()));
+        Optional<ChampionStats> statsOpt = Optional.ofNullable(statsIndex.get(champion.id()));
         if (statsOpt.isEmpty()) {
-            statsOpt = statsService.findChampionStats(champion.name());
-            statsOpt.ifPresent(stats -> statsIndex.putIfAbsent(champion.name(), stats));
+            statsOpt = statsService.findChampionStats(champion.id());
+            statsOpt.ifPresent(stats -> statsIndex.putIfAbsent(champion.id(), stats));
         }
         if (statsOpt.isEmpty()) {
             winRateLabel.setText("Stats unavailable");
@@ -278,7 +313,7 @@ public class ChampionsController {
 
         availableRoles = resolveRolesFromStats(stats);
         activeRole = availableRoles.get(0);
-        roleCache.put(champion.name(), availableRoles);
+        roleCache.put(champion.id(), availableRoles);
         renderRoleChips();
         renderMatchups(stats, winRate);
     }
@@ -328,7 +363,8 @@ public class ChampionsController {
     }
 
     private List<Role> rolesForChampion(String championName) {
-        return roleCache.computeIfAbsent(championName, name -> {
+        String canonical = ChampionNames.canonicalName(championName);
+        return roleCache.computeIfAbsent(canonical, name -> {
             ChampionStats stats = statsIndex.get(name);
             if (stats == null) {
                 stats = statsService.findChampionStats(name).orElse(null);
@@ -358,7 +394,7 @@ public class ChampionsController {
         detailRoleBar.getChildren().clear();
         for (Role role : availableRoles) {
             StackPane chip = new StackPane();
-            chip.getStyleClass().addAll("role-chip", "ally");
+            chip.getStyleClass().addAll("role-chip", "detail-role");
             if (role == activeRole) {
                 chip.getStyleClass().add("role-chip-active");
             }
@@ -444,11 +480,12 @@ public class ChampionsController {
     private HBox buildMatchupRow(MatchupRow row) {
         HBox container = new HBox(10);
         container.getStyleClass().add("matchup-row");
+        container.setAlignment(javafx.geometry.Pos.CENTER);
         ImageView icon = new ImageView(ChampionIconResolver.load(row.enemy()));
         icon.setFitWidth(28);
         icon.setFitHeight(28);
         icon.setPreserveRatio(true);
-        Label name = new Label(row.enemy());
+        Label name = new Label(ChampionNames.displayName(row.enemy()));
         name.getStyleClass().add("matchup-name");
         Label diff = new Label(PERCENT_FORMAT.format(row.diff() * 100) + "%");
         diff.getStyleClass().add(row.diff() >= 0 ? "matchup-positive" : "matchup-negative");
@@ -470,19 +507,18 @@ public class ChampionsController {
         });
     }
 
-    private String beautifyName(String rawFileName) {
+    private String extractCanonical(String rawFileName) {
         String withoutExt = rawFileName;
         int squareIndex = withoutExt.indexOf("Square");
         if (squareIndex >= 0) {
             withoutExt = withoutExt.substring(0, squareIndex);
         }
-        withoutExt = withoutExt.replace("_", " ");
         String decoded = URLDecoder.decode(withoutExt, StandardCharsets.UTF_8);
-        decoded = decoded.replaceAll("\\s+", " ").trim();
-        return decoded.isEmpty() ? rawFileName : decoded;
+        decoded = decoded.replaceAll("\\s+", "");
+        return ChampionNames.canonicalName(decoded);
     }
 
-    private record ChampionInfo(String name) { }
+    private record ChampionInfo(String id, String displayName) { }
 
     private record MatchupRow(String enemy, double diff, int games) { }
 

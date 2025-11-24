@@ -20,6 +20,14 @@ public final class ChampionIconResolver {
     private static final Image PLACEHOLDER = new Image(
             Objects.requireNonNull(ChampionIconResolver.class.getResourceAsStream("/org/example/images/placeholder.png"))
     );
+    private static final Image ALLY_PLACEHOLDER = loadImageOrFallback(
+            "/org/example/images/placeholder-ally.png",
+            PLACEHOLDER
+    );
+    private static final Image ENEMY_PLACEHOLDER = loadImageOrFallback(
+            "/org/example/images/placeholder-enemy.png",
+            PLACEHOLDER
+    );
     private static final Map<String, Image> CACHE = new ConcurrentHashMap<>();
     private static final Map<String, String> NAME_ALIASES = Map.ofEntries(
             Map.entry("Renata", "RenataGlasc"),
@@ -40,11 +48,24 @@ public final class ChampionIconResolver {
         if (championName == null || championName.isBlank()) {
             return PLACEHOLDER;
         }
-        return CACHE.computeIfAbsent(championName, ChampionIconResolver::resolveImage);
+        String canonical = ChampionNames.canonicalName(championName);
+        if (canonical == null || canonical.isBlank()) {
+            canonical = championName;
+        }
+        String key = canonical;
+        return CACHE.computeIfAbsent(key, ChampionIconResolver::resolveImage);
     }
 
     public static Image placeholder() {
         return PLACEHOLDER;
+    }
+
+    public static Image allyPlaceholder() {
+        return ALLY_PLACEHOLDER;
+    }
+
+    public static Image enemyPlaceholder() {
+        return ENEMY_PLACEHOLDER;
     }
 
     private static Image resolveImage(String championName) {
@@ -63,6 +84,15 @@ public final class ChampionIconResolver {
             }
         }
         return PLACEHOLDER;
+    }
+
+    private static Image loadImageOrFallback(String resource, Image fallback) {
+        try (InputStream stream = ChampionIconResolver.class.getResourceAsStream(resource)) {
+            if (stream == null) return fallback;
+            return new Image(stream);
+        } catch (Exception ignored) {
+            return fallback;
+        }
     }
 
     private static Image loadStandard(String resource) {
@@ -86,12 +116,15 @@ public final class ChampionIconResolver {
     }
 
     private static List<String> buildCandidates(String championName) {
-        String trimmed = championName.trim();
-        String canonical = NAME_ALIASES.getOrDefault(trimmed, trimmed);
+        String canonical = ChampionNames.canonicalName(championName);
+        if (canonical == null || canonical.isBlank()) {
+            canonical = championName;
+        }
+        String alias = NAME_ALIASES.getOrDefault(canonical, canonical);
         Set<String> bases = new LinkedHashSet<>();
-        addBaseVariants(trimmed, bases);
-        if (!canonical.equals(trimmed)) {
-            addBaseVariants(canonical, bases);
+        addBaseVariants(canonical, bases);
+        if (!alias.equals(canonical)) {
+            addBaseVariants(alias, bases);
         }
         List<String> candidates = new ArrayList<>();
         for (String base : bases) {

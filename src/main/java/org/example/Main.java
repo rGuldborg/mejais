@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.example.util.WindowResizer;
 
 public class Main extends Application {
 
@@ -46,6 +47,10 @@ public class Main extends Application {
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setTitle("League Assistant FX");
         stage.setScene(scene);
+        stage.setMinWidth(1100);
+        stage.setMinHeight(720);
+        stage.setResizable(true);
+        WindowResizer.makeResizable(stage, windowRoot);
         stage.show();
 
         System.out.println("=== App Started Successfully ===");

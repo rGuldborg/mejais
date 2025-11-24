@@ -5,6 +5,7 @@ import com.merakianalytics.orianna.types.common.Platform;
 import org.example.collector.SnapshotStore;
 import org.example.model.ChampionStats;
 import org.example.model.ChampionSummary;
+import org.example.model.PairWinRate;
 import org.example.model.RecommendationContext;
 import org.example.model.Role;
 import org.example.model.SlotSelection;
@@ -12,6 +13,7 @@ import org.example.model.StatsSnapshot;
 import org.example.model.Tier;
 import org.example.model.WinPlay;
 import org.example.util.ChampionIconResolver;
+import org.example.util.ChampionNames;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,27 +57,37 @@ public class RiotStatsService implements StatsService {
             int limit = context == null ? 20 : context.limit();
 
             for (var entry : snapshot.champions().entrySet()) {
-                String champion = entry.getKey();
+                String champion = ChampionNames.canonicalName(entry.getKey());
                 if (excluded.contains(champion)) continue;
                 ChampionStats stats = entry.getValue();
                 if (stats.games() < MIN_TOTAL_GAMES) continue;
 
-                double op = clamp(stats.winRate());
-                double synergy = synergyScore(stats, context);
-                double counter = counterScore(stats, context);
+                double opRaw = stats.winRate();
+                double op = clamp(opRaw);
+                PairMetrics synergy = synergyMetrics(stats, context);
+                PairMetrics counter = counterMetrics(stats, context);
+                double synWr = synergy.winRate();
+                double coWr = counter.winRate();
                 Tier opTier = Tier.fromWinRate(op);
-                Tier synTier = Tier.fromWinRate(synergy, true);
-                Tier coTier = Tier.fromWinRate(counter, true);
+                Tier synTier = Tier.fromWinRate(synWr, true);
+                Tier coTier = Tier.fromWinRate(coWr, true);
                 double score = weightedScore(opTier, synTier, coTier);
 
+                Role preferredRole = stats.primaryRole();
                 summaries.add(new ChampionSummary(
                         champion,
-                        champion,
+                        ChampionNames.displayName(champion),
                         opTier,
                         synTier,
                         coTier,
                         score,
-                        ChampionIconResolver.load(champion)
+                        ChampionIconResolver.load(champion),
+                        preferredRole,
+                        opRaw,
+                        synWr,
+                        coWr,
+                        synergy.entries(),
+                        counter.entries()
                 ));
             }
 
@@ -89,11 +101,12 @@ public class RiotStatsService implements StatsService {
 
     @Override
     public Optional<ChampionStats> findChampionStats(String championId) {
+        String canonical = ChampionNames.canonicalName(championId);
         StatsSnapshot snapshot = snapshot();
         if (snapshot == null || snapshot.champions() == null) {
             return Optional.empty();
         }
-        return Optional.ofNullable(snapshot.champions().get(championId));
+        return Optional.ofNullable(snapshot.champions().get(canonical));
     }
 
     @Override
@@ -123,46 +136,71 @@ public class RiotStatsService implements StatsService {
     private Set<String> excludedChampions(RecommendationContext context) {
         if (context == null) return Set.of();
         Set<String> excluded = new HashSet<>();
-        context.allySelections().forEach(sel -> excluded.add(sel.champion()));
-        context.enemySelections().forEach(sel -> excluded.add(sel.champion()));
-        excluded.addAll(context.bannedChampions());
+        context.allySelections().forEach(sel -> addCanonical(excluded, sel.champion()));
+        context.enemySelections().forEach(sel -> addCanonical(excluded, sel.champion()));
+        context.bannedChampions().forEach(name -> addCanonical(excluded, name));
         return excluded;
     }
 
-    private double synergyScore(ChampionStats stats, RecommendationContext context) {
-        if (context == null) return Double.NaN;
-        Role role = context.targetRole();
-        List<String> partners = context.allySelections().stream()
-                .filter(sel -> role.pairsWith(sel.role()))
-                .map(SlotSelection::champion)
-                .toList();
-        return pairAverage(stats.synergy(), partners);
+    private void addCanonical(Set<String> target, String name) {
+        String canonical = ChampionNames.canonicalName(name);
+        if (canonical != null && !canonical.isBlank()) {
+            target.add(canonical);
+        }
     }
 
-    private double counterScore(ChampionStats stats, RecommendationContext context) {
-        if (context == null) return Double.NaN;
-        Role role = context.targetRole();
-        List<String> opponents = context.enemySelections().stream()
-                .filter(sel -> role.contests(sel.role()))
-                .map(SlotSelection::champion)
-                .toList();
-        return pairAverage(stats.counters(), opponents);
+    private PairMetrics synergyMetrics(ChampionStats stats, RecommendationContext context) {
+        if (context == null) return PairMetrics.EMPTY;
+        List<SlotSelection> group = context.allyPerspective()
+                ? context.allySelections()
+                : context.enemySelections();
+        return pairMetrics(stats.synergy(), canonicalize(group));
     }
 
-    private double pairAverage(java.util.Map<String, WinPlay> data, List<String> opponents) {
-        if (opponents == null || opponents.isEmpty()) {
-            return Double.NaN;
+    private PairMetrics counterMetrics(ChampionStats stats, RecommendationContext context) {
+        if (context == null) return PairMetrics.EMPTY;
+        List<SlotSelection> group = context.allyPerspective()
+                ? context.enemySelections()
+                : context.allySelections();
+        return pairMetrics(stats.counters(), canonicalize(group));
+    }
+
+    private PairMetrics pairMetrics(Map<String, WinPlay> data, List<String> names) {
+        if (names.isEmpty()) {
+            return PairMetrics.EMPTY;
         }
         double total = 0.0;
         int count = 0;
-        for (String name : opponents) {
+        List<PairWinRate> entries = new ArrayList<>();
+        for (String name : names) {
             WinPlay wp = data.get(name);
             if (wp != null && wp.getGames() >= MIN_PAIR_GAMES) {
-                total += wp.winRate();
+                double wr = wp.winRate();
+                total += wr;
                 count++;
+                entries.add(new PairWinRate(ChampionNames.displayName(name), wr));
             }
         }
-        return count > 0 ? clamp(total / count) : Double.NaN;
+        if (count == 0) {
+            return PairMetrics.EMPTY;
+        }
+        double average = clamp(total / count);
+        return new PairMetrics(average, List.copyOf(entries));
+    }
+
+    private List<String> canonicalize(List<SlotSelection> selections) {
+        if (selections == null || selections.isEmpty()) {
+            return List.of();
+        }
+        Set<String> unique = new java.util.LinkedHashSet<>();
+        for (SlotSelection selection : selections) {
+            if (selection == null) continue;
+            String canonical = ChampionNames.canonicalName(selection.champion());
+            if (canonical != null && !canonical.isBlank()) {
+                unique.add(canonical);
+            }
+        }
+        return unique.isEmpty() ? List.of() : List.copyOf(unique);
     }
 
     private double clamp(double value) {
@@ -189,5 +227,8 @@ public class RiotStatsService implements StatsService {
             System.err.println("[RiotStatsService] Unknown platform '" + tag + "', falling back to EUW.");
             return Platform.EUROPE_WEST;
         }
+    }
+    private record PairMetrics(double winRate, List<PairWinRate> entries) {
+        private static final PairMetrics EMPTY = new PairMetrics(Double.NaN, List.of());
     }
 }

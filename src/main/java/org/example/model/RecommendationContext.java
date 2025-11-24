@@ -10,6 +10,7 @@ public record RecommendationContext(
         List<SlotSelection> enemySelections,
         List<String> bannedChampions,
         Role targetRole,
+        boolean allyPerspective,
         int limit
 ) {
     private static final int DEFAULT_LIMIT = 20;

@@ -45,9 +45,10 @@ public final class LeagueClientChampSelectWatcher {
     });
     private final AtomicBoolean running = new AtomicBoolean();
     private volatile ScheduledFuture<?> pollHandle;
-    private volatile ChampSelectSnapshot lastSnapshot = ChampSelectSnapshot.waiting("Waiting for League client...");
+    private volatile ChampSelectSnapshot lastSnapshot = ChampSelectSnapshot.waiting("Looking for League client...");
     private volatile LockfileInfo cachedInfo;
     private volatile HttpClient httpClient;
+    private volatile Path lockfilePath;
 
     public void addListener(Consumer<ChampSelectSnapshot> listener) {
         listeners.add(listener);
@@ -90,7 +91,15 @@ public final class LeagueClientChampSelectWatcher {
 
     private ChampSelectSnapshot fetchSnapshot() {
         try {
-            LockfileInfo info = readLockfile();
+            Path path = locateLockfile().orElse(null);
+            if (path == null) {
+                cachedInfo = null;
+                httpClient = null;
+                lockfilePath = null;
+                return ChampSelectSnapshot.waiting("Looking for League client...");
+            }
+            lockfilePath = path;
+            LockfileInfo info = readLockfile(path);
             HttpClient client = ensureClient(info);
             HttpRequest request = HttpRequest.newBuilder(info.endpoint("/lol-champ-select/v1/session"))
                     .timeout(Duration.ofSeconds(2))
@@ -107,10 +116,12 @@ public final class LeagueClientChampSelectWatcher {
             JsonNode root = mapper.readTree(response.body());
             return parseSnapshot(root);
         } catch (IOException ex) {
-            return ChampSelectSnapshot.waiting("Waiting for League client...");
+            cachedInfo = null;
+            httpClient = null;
+            return ChampSelectSnapshot.waiting("Looking for League client...");
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
-            return ChampSelectSnapshot.waiting("Waiting for League client...");
+            return ChampSelectSnapshot.waiting("Looking for League client...");
         }
     }
 
@@ -181,11 +192,7 @@ public final class LeagueClientChampSelectWatcher {
         return ChampSelectSnapshot.Side.UNKNOWN;
     }
 
-    private LockfileInfo readLockfile() throws IOException {
-        Path path = resolveLockfilePath();
-        if (!Files.exists(path)) {
-            throw new IOException("Lockfile not found at " + path);
-        }
+    private LockfileInfo readLockfile(Path path) throws IOException {
         String content = Files.readString(path).trim();
         String[] parts = content.split(":");
         if (parts.length < 5) {
@@ -198,18 +205,52 @@ public final class LeagueClientChampSelectWatcher {
         return new LockfileInfo(port, password, protocol, auth);
     }
 
-    private Path resolveLockfilePath() {
+    private Optional<Path> locateLockfile() {
+        Path override = overrideLockfile();
+        if (override != null) {
+            if (Files.exists(override)) {
+                return Optional.of(override);
+            }
+            System.err.println("[LCU Watcher] LEAGUE_LOCKFILE_PATH set but not found: " + override);
+        }
+        List<Path> candidates = candidatePaths();
+        for (Path candidate : candidates) {
+            if (Files.exists(candidate)) {
+                return Optional.of(candidate);
+            }
+        }
+        return Optional.empty();
+    }
+
+    private Path overrideLockfile() {
         String override = System.getenv("LEAGUE_LOCKFILE_PATH");
-        if (override != null && !override.isBlank()) {
-            return Path.of(override.trim());
+        if (override == null || override.isBlank()) {
+            return null;
         }
-        String localAppData = Optional.ofNullable(System.getenv("LOCALAPPDATA"))
-                .orElseGet(() -> System.getProperty("user.home", ""));
-        Path riotClient = Path.of(localAppData, "Riot Games", "Riot Client", "Config", "lockfile");
-        if (Files.exists(riotClient)) {
-            return riotClient;
+        return Path.of(override.trim());
+    }
+
+    private List<Path> candidatePaths() {
+        List<Path> paths = new ArrayList<>();
+        String os = System.getProperty("os.name", "generic").toLowerCase();
+        if (os.contains("mac")) {
+            Path system = Path.of("/Applications/League of Legends.app/Contents/LoL/lockfile");
+            Path user = Path.of(System.getProperty("user.home", ""), "Applications", "League of Legends.app", "Contents", "LoL", "lockfile");
+            paths.add(system);
+            paths.add(user);
+        } else { // default to Windows order
+            paths.add(Path.of("C:", "Riot Games", "League of Legends", "lockfile"));
+            String localAppData = Optional.ofNullable(System.getenv("LOCALAPPDATA")).orElse("");
+            if (!localAppData.isBlank()) {
+                paths.add(Path.of(localAppData, "Riot Games", "League of Legends", "lockfile"));
+                paths.add(Path.of(localAppData, "Riot Games", "Riot Client", "Config", "lockfile"));
+            }
+            String programFiles = Optional.ofNullable(System.getenv("PROGRAMFILES")).orElse("C:\\Program Files");
+            if (!programFiles.isBlank()) {
+                paths.add(Path.of(programFiles, "Riot Games", "League of Legends", "lockfile"));
+            }
         }
-        return Path.of("C:", "Riot Games", "League of Legends", "lockfile");
+        return paths;
     }
 
     private HttpClient ensureClient(LockfileInfo info) {

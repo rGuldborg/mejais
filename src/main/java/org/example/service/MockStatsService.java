@@ -2,11 +2,13 @@ package org.example.service;
 
 import org.example.model.ChampionStats;
 import org.example.model.ChampionSummary;
+import org.example.model.PairWinRate;
 import org.example.model.RecommendationContext;
 import org.example.model.Role;
 import org.example.model.SlotSelection;
 import org.example.model.Tier;
 import org.example.util.ChampionIconResolver;
+import org.example.util.ChampionNames;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,24 +16,17 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.Optional;
-import java.util.Random;
 
 public class MockStatsService implements StatsService {
     private static final double OP_WEIGHT = 0.5;
     private static final double SYN_WEIGHT = 0.25;
     private static final double COUNTER_WEIGHT = 0.25;
-    private static final Map<String, Double> WIN_RATES = Map.of(
-            "Aatrox", 0.54,
-            "Ahri", 0.52,
-            "Darius", 0.50,
-            "Garen", 0.49,
-            "Vayne", 0.55,
-            "Anivia", 0.53
-    );
+    private static final Map<String, Double> WIN_RATES = initWinRates();
     private final Map<String, ChampionStats> cachedStats = new LinkedHashMap<>();
 
     @Override
@@ -43,14 +38,17 @@ public class MockStatsService implements StatsService {
         for (String id : WIN_RATES.keySet()) {
             if (excluded.contains(id)) continue;
             double opWr = clamp(WIN_RATES.getOrDefault(id, 0.48));
-            double synWr = adjustForAllies(opWr, id, context);
-            double coWr = adjustForEnemies(opWr, id, context);
+            PairResult synResult = simulateSynergy(opWr, id, context);
+            PairResult coResult = simulateCounters(opWr, id, context);
+            double synWr = synResult.winRate();
+            double coWr = coResult.winRate();
 
             Tier opTier = Tier.fromWinRate(opWr);
             Tier synTier = Tier.fromWinRate(synWr, true);
             Tier coTier = Tier.fromWinRate(coWr, true);
 
             double score = weightedScore(opTier, synTier, coTier);
+            Role role = sampleRole(id);
             result.add(new ChampionSummary(
                     id,
                     id,
@@ -58,7 +56,13 @@ public class MockStatsService implements StatsService {
                     synTier,
                     coTier,
                     score,
-                    ChampionIconResolver.load(id)
+                    ChampionIconResolver.load(id),
+                    role,
+                    opWr,
+                    synWr,
+                    coWr,
+                    synResult.pairs(),
+                    coResult.pairs()
             ));
         }
         result.sort(Comparator.comparingDouble(ChampionSummary::score).reversed());
@@ -70,7 +74,8 @@ public class MockStatsService implements StatsService {
         if (championId == null || championId.isBlank()) {
             return Optional.empty();
         }
-        return Optional.of(cachedStats.computeIfAbsent(championId, this::generateStats));
+        String canonical = ChampionNames.canonicalName(championId);
+        return Optional.of(cachedStats.computeIfAbsent(canonical, this::generateStats));
     }
 
     @Override
@@ -96,34 +101,64 @@ public class MockStatsService implements StatsService {
         return stats;
     }
 
-    private double adjustForAllies(double base, String champId, RecommendationContext context) {
-        if (context == null || context.allySelections().isEmpty()) {
-            return Double.NaN;
-        }
-        Role target = context.targetRole();
-        double value = base;
-        boolean matched = false;
-        for (var ally : context.allySelections()) {
-            if (!target.pairsWith(ally.role())) continue;
-            matched = true;
-            value += seededDelta(champId, ally.champion(), 0.004);
-        }
-        return matched ? clamp(value) : Double.NaN;
+    private Role sampleRole(String championId) {
+        int hash = Math.abs(championId.hashCode());
+        return switch (hash % 5) {
+            case 0 -> Role.TOP;
+            case 1 -> Role.JUNGLE;
+            case 2 -> Role.MID;
+            case 3 -> Role.BOTTOM;
+            default -> Role.SUPPORT;
+        };
     }
 
-    private double adjustForEnemies(double base, String champId, RecommendationContext context) {
-        if (context == null || context.enemySelections().isEmpty()) {
-            return Double.NaN;
+    private PairResult simulateSynergy(double base, String champId, RecommendationContext context) {
+        if (context == null) {
+            return PairResult.EMPTY;
         }
-        Role target = context.targetRole();
-        double value = base;
-        boolean matched = false;
-        for (var enemy : context.enemySelections()) {
-            if (!target.contests(enemy.role())) continue;
-            matched = true;
-            value -= seededDelta(champId, enemy.champion(), 0.005);
+        List<SlotSelection> allies = context.allyPerspective()
+                ? context.allySelections()
+                : context.enemySelections();
+        if (allies.isEmpty()) {
+            return PairResult.EMPTY;
         }
-        return matched ? clamp(value) : Double.NaN;
+        return simulatePairs(base, champId, allies, true);
+    }
+
+    private PairResult simulateCounters(double base, String champId, RecommendationContext context) {
+        if (context == null) {
+            return PairResult.EMPTY;
+        }
+        List<SlotSelection> opponents = context.allyPerspective()
+                ? context.enemySelections()
+                : context.allySelections();
+        if (opponents.isEmpty()) {
+            return PairResult.EMPTY;
+        }
+        return simulatePairs(base, champId, opponents, false);
+    }
+
+    private PairResult simulatePairs(double base,
+                                     String champId,
+                                     List<SlotSelection> selections,
+                                     boolean allies) {
+        double total = 0;
+        int count = 0;
+        List<PairWinRate> pairs = new ArrayList<>();
+        java.util.Set<String> seen = new java.util.LinkedHashSet<>();
+        for (SlotSelection selection : selections) {
+            String canonical = ChampionNames.canonicalName(selection.champion());
+            if (canonical == null || canonical.isBlank() || !seen.add(canonical)) {
+                continue;
+            }
+            double delta = seededDelta(champId, canonical, allies ? 0.004 : 0.005);
+            double value = clamp(allies ? base + delta : base - delta);
+            total += value;
+            count++;
+            pairs.add(new PairWinRate(ChampionNames.displayName(canonical), value));
+        }
+        double average = count > 0 ? clamp(total / count) : Double.NaN;
+        return count > 0 ? new PairResult(average, List.copyOf(pairs)) : PairResult.EMPTY;
     }
 
     private double seededDelta(String champ, String partner, double scale) {
@@ -157,10 +192,43 @@ public class MockStatsService implements StatsService {
                         context.bannedChampions().stream()
                 )
                 .flatMap(s -> s)
+                .map(ChampionNames::canonicalName)
                 .filter(name -> name != null && !name.isBlank())
                 .collect(Collectors.toCollection(java.util.LinkedHashSet::new));
     }
 
-    private static final List<String> SAMPLE_SYNERGY = List.of("Ahri", "Thresh", "Jarvan IV", "Lux");
-    private static final List<String> SAMPLE_COUNTERS = List.of("Yorick", "Camille", "Fizz", "Lucian", "Vayne");
+    private static Map<String, Double> initWinRates() {
+        Map<String, Double> rates = new LinkedHashMap<>();
+        rates.put("Aatrox", 0.54);
+        rates.put("Ahri", 0.52);
+        rates.put("Darius", 0.50);
+        rates.put("Garen", 0.49);
+        rates.put("Vayne", 0.55);
+        rates.put("Anivia", 0.53);
+        for (String champion : ChampionNames.canonicalNames()) {
+            rates.putIfAbsent(champion, autoWinRate(champion));
+        }
+        return Collections.unmodifiableMap(rates);
+    }
+
+    private static double autoWinRate(String champion) {
+        int hash = Math.abs(champion.hashCode());
+        double offset = ((hash % 21) - 10) * 0.002;
+        double base = 0.5 + offset;
+        return Math.max(0.45, Math.min(0.57, base));
+    }
+
+    private static List<String> canonicalList(String... names) {
+        List<String> canonicals = new ArrayList<>(names.length);
+        for (String name : names) {
+            canonicals.add(ChampionNames.canonicalName(name));
+        }
+        return List.copyOf(canonicals);
+    }
+
+    private static final List<String> SAMPLE_SYNERGY = canonicalList("Ahri", "Thresh", "Jarvan IV", "Lux");
+    private static final List<String> SAMPLE_COUNTERS = canonicalList("Yorick", "Camille", "Fizz", "Lucian", "Vayne");
+    private record PairResult(double winRate, List<PairWinRate> pairs) {
+        private static final PairResult EMPTY = new PairResult(Double.NaN, List.of());
+    }
 }

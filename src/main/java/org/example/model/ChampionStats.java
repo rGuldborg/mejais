@@ -48,4 +48,24 @@ public class ChampionStats {
     public double winRate() {
         return games == 0 ? 0.0 : (double) wins / games;
     }
+
+    @JsonIgnore
+    public Role primaryRole() {
+        return roleCounts.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(entry -> mapRole(entry.getKey()))
+                .orElse(Role.UNKNOWN);
+    }
+
+    private Role mapRole(String lane) {
+        if (lane == null) return Role.UNKNOWN;
+        return switch (lane.toUpperCase()) {
+            case "TOP" -> Role.TOP;
+            case "JUNGLE" -> Role.JUNGLE;
+            case "MIDDLE", "MID" -> Role.MID;
+            case "ADC", "BOTTOM", "BOT" -> Role.BOTTOM;
+            case "SUPPORT", "UTILITY" -> Role.SUPPORT;
+            default -> Role.UNKNOWN;
+        };
+    }
 }

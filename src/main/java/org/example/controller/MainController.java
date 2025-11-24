@@ -44,6 +44,8 @@ public class MainController {
     private double xOffset;
     private double yOffset;
     private ChampionsController championsController;
+    private Node gameView;
+    private Node championsView;
 
     @FXML
     public void initialize() {
@@ -65,8 +67,9 @@ public class MainController {
         });
 
         // Load the primary GAME view by default so placeholders/map are visible immediately
-        loadView("game-view.fxml");
+        showGameView();
         setActiveTab(gameTab);
+        ensureChampionsViewInitialized();
         updateSnapshotTimestamp();
     }
 
@@ -93,13 +96,13 @@ public class MainController {
     @FXML
     private void onGameNav() {
         setActiveTab(gameTab);
-        loadView("game-view.fxml");
+        showGameView();
     }
 
     @FXML
     private void onChampionsNav() {
         setActiveTab(championsTab);
-        loadView("champions-view.fxml");
+        showChampionView();
     }
 
     @FXML
@@ -170,23 +173,56 @@ public class MainController {
         }
     }
 
-    private void loadView(String fxmlName) {
-        try {
-            var loader = new FXMLLoader(getClass().getResource("/org/example/fxml/" + fxmlName));
-            var node = loader.load();
-            Object controller = loader.getController();
-            if (controller instanceof ChampionsController champController) {
-                champController.bindSearchField(searchField);
-                championsController = champController;
-            } else if (championsController != null) {
-                championsController.detachSearchField();
-                championsController = null;
+    private void showGameView() {
+        Node view = getGameView();
+        if (view != null) {
+            contentArea.getChildren().setAll(view);
+        }
+    }
+
+    private Node getGameView() {
+        if (gameView == null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/fxml/game-view.fxml"));
+                gameView = loader.load();
+            } catch (Exception e) {
+                System.err.println("Could not load game view.");
+                e.printStackTrace();
             }
-            contentArea.getChildren().setAll((Node) node);
+        }
+        return gameView;
+    }
+
+    private void showChampionView() {
+        ensureChampionsViewInitialized();
+        if (championsView != null) {
+            contentArea.getChildren().setAll(championsView);
+        }
+    }
+
+    private void ensureChampionsViewInitialized() {
+        if (championsView != null) {
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/fxml/champions-view.fxml"));
+            championsView = loader.load();
+            championsController = loader.getController();
+            if (searchField != null) {
+                championsController.bindSearchField(searchField);
+            }
+            championsController.setShowViewRequest(this::showChampionViewFromSearch);
         } catch (Exception e) {
-            System.err.println("Could not load view: " + fxmlName);
+            System.err.println("Could not load champions view.");
             e.printStackTrace();
         }
+    }
+
+    private void showChampionViewFromSearch() {
+        Platform.runLater(() -> {
+            setActiveTab(championsTab);
+            showChampionView();
+        });
     }
 
     private Stage getStage() {
