@@ -2,6 +2,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.Group?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.layout.*?>
@@ -18,9 +19,12 @@
                         onMousePressed="#onHeaderPressed"
                         onMouseDragged="#onHeaderDragged">
                 <left>
-                    <Label text="legends.io" styleClass="window-title" BorderPane.alignment="CENTER_LEFT"/>
-                </left>
-                <center>
+                    <ImageView fitHeight="25" preserveRatio="true">
+                        <image>
+                            <Image url="@/org/example/images/logo/logot.png"/>
+                        </image>
+                    </ImageView>
+                </left>                <center>
                     <HBox alignment="CENTER" spacing="4">
                         <padding>
                             <Insets top="6" right="0" bottom="6" left="0"/>
