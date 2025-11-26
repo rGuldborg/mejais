@@ -77,9 +77,9 @@
                 </center>
 
                 <right>
-                    <HBox spacing="8" alignment="CENTER_RIGHT">
+                    <HBox spacing="8" alignment="TOP_RIGHT">
                         <padding>
-                            <Insets top="4" right="4" bottom="4" left="4"/>
+                            <Insets top="8" right="8" bottom="4" left="4"/>
                         </padding>
 
                         <Button fx:id="minimizeButton"
