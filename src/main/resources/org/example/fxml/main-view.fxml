@@ -86,7 +86,7 @@
                                 onAction="#onMinimize"
                                 styleClass="window-control text-button window-minimize">
                             <graphic>
-                                <SVGPath content="M2 8 H14" styleClass="window-icon"/>
+                                <SVGPath content="M2 7 H14" styleClass="window-icon"/>
                             </graphic>
                         </Button>
                         <Button fx:id="maximizeButton"
