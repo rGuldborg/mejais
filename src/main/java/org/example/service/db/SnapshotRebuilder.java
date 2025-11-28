@@ -20,7 +20,7 @@ public class SnapshotRebuilder {
             Map<String, ChampionStats> championStatsMap = new HashMap<>();
 
             for (String name : championNames.values()) {
-                championStatsMap.put(name, new ChampionStats());
+                championStatsMap.put(name, new ChampionStats())
             }
 
             loadOverallChampionStats(conn, championStatsMap, championNames);
@@ -53,9 +53,9 @@ public class SnapshotRebuilder {
                     ChampionStats newStats = new ChampionStats(
                         rs.getInt("wins"),
                         rs.getInt("plays"),
-                        existingStats.getRoleCounts(),
-                        existingStats.getSynergy(),
-                        existingStats.getCounters()
+                        existingStats.getRoleCounts(),  
+                        existingStats.getSynergy(),    
+                        existingStats.getCounters()     
                     );
                     statsMap.put(name, newStats);
                 }
