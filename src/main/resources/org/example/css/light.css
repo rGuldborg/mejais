@@ -6,6 +6,14 @@
 .app-window-shadow {
     -fx-background-color: transparent;
     -fx-effect: dropshadow(gaussian, rgba(15, 42, 77, 0.25), 30, 0.2, 0, 8);
+    -fx-background-radius: 28;
+    -fx-border-radius: 28;
+}
+
+.app-window.window-maximized,
+.app-window-shadow.window-maximized {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
 }
 
 .app-window {
@@ -51,6 +59,7 @@
 .content-area {
     -fx-background-color: #f6f7fb;
     -fx-padding: 12 24 24 24;
+    -fx-background-radius: 0 0 28 28;
 }
 
 .tab-bar {
@@ -71,13 +80,13 @@
 
 .game-view-root {
     -fx-background-color: #e1e4f0;
-    -fx-background-radius: 18;
-    -fx-border-radius: 18;
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
     -fx-background-insets: 0;
     -fx-border-insets: 0;
     -fx-border-color: #e1e4ef;
     -fx-border-width: 0;
-    -fx-effect: dropshadow(gaussian, rgba(15, 42, 77, 0.08), 14, 0.2, 0, 3);
+    -fx-effect: dropshadow(gaussian, rgba(15, 42, 77, 0.08), 10, 0.18, 0, 2);
 }
 
 .game-view-root > .center,
@@ -85,24 +94,29 @@
 .game-view-root > .right,
 .champions-view-root > .center,
 .champions-view-root > .left,
-.champions-view-root > .right {
+.champions-view-root > .right,
+.help-view-root > .center,
+.help-view-root > .left,
+.help-view-root > .right {
     -fx-padding: 0;
 }
 
 .champions-view-root {
     -fx-background-color: #f6f7fb;
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
 }
 
 
 .help-view-root {
     -fx-background-color: #e1e4f0;
-    -fx-background-radius: 18;
-    -fx-border-radius: 18;
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
     -fx-background-insets: 0;
     -fx-border-insets: 0;
     -fx-border-color: #e1e4ef;
     -fx-border-width: 0;
-    -fx-effect: dropshadow(gaussian, rgba(15, 42, 77, 0.08), 14, 0.2, 0, 3);
+    -fx-effect: dropshadow(gaussian, rgba(15, 42, 77, 0.08), 10, 0.18, 0, 2);
 }
 
 .help-title {
@@ -326,6 +340,25 @@ Button.header-icon-button:focused {
     -fx-padding: 0 8 !important;
     -fx-focus-color: transparent !important;
     -fx-faint-focus-color: transparent !important;
+}
+
+.footer-button {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #0f2a4d;
+    -fx-border-color: rgba(15, 42, 77, 0.15);
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 4 14;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(15,42,77,0.08), 4, 0.2, 0, 1);
+}
+
+.footer-button:disabled {
+    -fx-opacity: 0.6;
+    -fx-cursor: default;
+    -fx-effect: none;
 }
 
 .window-icon,

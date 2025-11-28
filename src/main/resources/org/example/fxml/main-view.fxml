@@ -148,6 +148,12 @@
             <Label text="|" styleClass="footer-text"/>
             <Label fx:id="patchLabel" text="Patch: --" styleClass="footer-text"/>
             <Label fx:id="updateAvailableLabel" text="Update Available!" styleClass="footer-text" visible="false" managed="false"/>
+            <Button fx:id="updateButton"
+                    text="Update now"
+                    visible="false"
+                    managed="false"
+                    onAction="#onUpdateSnapshot"
+                    styleClass="footer-button"/>
             <Pane HBox.hgrow="ALWAYS"/>
             <Label text="League Status:" styleClass="footer-text"/>
             <Label fx:id="lcuStatusLabel" text="Unknown" styleClass="footer-text"/>

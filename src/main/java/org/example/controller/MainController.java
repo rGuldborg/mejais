@@ -25,6 +25,7 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -32,6 +33,9 @@ import java.time.format.DateTimeFormatter;
 import java.net.URL;
 import java.net.HttpURLConnection;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 public class MainController {
 
@@ -45,7 +49,6 @@ public class MainController {
 
     @FXML private TextField searchField;
     @FXML private Button themeToggleButton;
-    @FXML private Button refreshButton;
     @FXML private Button minimizeButton;
     @FXML private Button maximizeButton;
     @FXML private Button closeButton;
@@ -61,6 +64,7 @@ public class MainController {
     @FXML private Label updateAvailableLabel;
     @FXML private Label lcuStatusLabel;
     @FXML private Circle lcuStatusIndicator;
+    @FXML private Button updateButton;
 
     private final LeagueClientChampSelectWatcher clientWatcher = new LeagueClientChampSelectWatcher();
     private final SimpleObjectProperty<ChampSelectSnapshot> lcuSnapshot = new SimpleObjectProperty<>();
@@ -68,6 +72,9 @@ public class MainController {
     private boolean darkMode = true;
     private double xOffset;
     private double yOffset;
+    private boolean draggingWindow;
+    private volatile long pendingRemoteSnapshotStamp = -1L;
+    private volatile boolean updateInProgress;
     private GameController gameController;
     private ChampionsController championsController;
     private Node gameView;
@@ -80,9 +87,12 @@ public class MainController {
         ThemeManager.applyTheme("dark.css");
 
         themeToggleButton.setText("");
-        if (refreshButton != null) refreshButton.setText("");
-        flattenButtons(themeToggleButton, refreshButton,
+        flattenButtons(themeToggleButton,
                 minimizeButton, maximizeButton, closeButton);
+        if (updateButton != null) {
+            updateButton.setVisible(false);
+            updateButton.setManaged(false);
+        }
         updateThemeIcon();
         Platform.runLater(() -> {
             if (windowHeader != null) {
@@ -161,12 +171,6 @@ public class MainController {
     }
 
     @FXML
-    private void onRefresh() {
-        updateSnapshotTimestamp();
-        checkAndUpdateStatus();
-    }
-
-    @FXML
     private void onGameNav() {
         setActiveTab(gameTab);
         showGameView();
@@ -224,6 +228,17 @@ public class MainController {
     }
 
     @FXML
+    private void onUpdateSnapshot() {
+        if (updateButton == null || updateInProgress || REMOTE_DB_URL.isBlank()) {
+            return;
+        }
+        updateInProgress = true;
+        updateButton.setDisable(true);
+        updateButton.setText("Updating...");
+        new Thread(this::downloadSnapshot).start();
+    }
+
+    @FXML
     private void onMaximize() {
         var stage = getStage();
         if (stage != null) {
@@ -251,6 +266,12 @@ public class MainController {
     private void onHeaderPressed(MouseEvent event) {
         var stage = getStage();
         if (stage != null) {
+            double localY = event.getY();
+            if (localY < 6) {
+                draggingWindow = false;
+                return;
+            }
+            draggingWindow = true;
             xOffset = stage.getX() - event.getScreenX();
             yOffset = stage.getY() - event.getScreenY();
         }
@@ -259,7 +280,7 @@ public class MainController {
     @FXML
     private void onHeaderDragged(MouseEvent event) {
         var stage = getStage();
-        if (stage != null) {
+        if (stage != null && draggingWindow) {
             stage.setX(event.getScreenX() + xOffset);
             stage.setY(event.getScreenY() + yOffset);
         }
@@ -404,12 +425,13 @@ public class MainController {
     }
 
     private void checkAndUpdateStatus() {
-        if (updateAvailableLabel == null || REMOTE_DB_URL.isBlank()) {
+        if ((updateAvailableLabel == null && updateButton == null) || REMOTE_DB_URL.isBlank()) {
             return;
         }
 
         new Thread(() -> {
             boolean updateFound = false;
+            long remoteLastModified = -1L;
             try {
                 File localDb = new File("data/snapshot.db");
                 long localLastModified = localDb.exists() ? localDb.lastModified() : 0;
@@ -419,7 +441,7 @@ public class MainController {
                 connection.setRequestMethod("HEAD"); 
                 connection.connect();
 
-                long remoteLastModified = connection.getLastModified();
+                remoteLastModified = connection.getLastModified();
                 
                 if (remoteLastModified > localLastModified) {
                     updateFound = true;
@@ -429,10 +451,84 @@ public class MainController {
             }
 
             final boolean finalUpdateFound = updateFound;
-            Platform.runLater(() -> {
-                updateAvailableLabel.setVisible(finalUpdateFound);
-                updateAvailableLabel.setManaged(finalUpdateFound);
-            });
+            final long remoteStamp = remoteLastModified;
+            Platform.runLater(() -> updateUpdateUi(finalUpdateFound, remoteStamp));
         }).start();
+    }
+
+    private void updateUpdateUi(boolean available, long remoteStamp) {
+        if (updateAvailableLabel != null) {
+            updateAvailableLabel.setVisible(available);
+            updateAvailableLabel.setManaged(available);
+            if (available) {
+                updateAvailableLabel.setText("Update Available!");
+            }
+        }
+        if (updateButton != null) {
+            updateButton.setVisible(available);
+            updateButton.setManaged(available);
+            if (available) {
+                updateButton.setDisable(updateInProgress);
+                if (!updateInProgress) {
+                    updateButton.setText("Update now");
+                }
+            } else {
+                updateButton.setDisable(false);
+                updateButton.setText("Update now");
+            }
+        }
+    }
+
+    private void downloadSnapshot() {
+        Path target = Path.of("data", "snapshot.db");
+        Path tempFile = null;
+        try {
+            Files.createDirectories(target.getParent());
+            tempFile = Files.createTempFile("snapshot-update", ".db");
+            URL url = new URL(REMOTE_DB_URL);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setUseCaches(false);
+            try (InputStream in = connection.getInputStream();
+                 OutputStream out = Files.newOutputStream(tempFile)) {
+                byte[] buffer = new byte[8192];
+                int read;
+                while ((read = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
+                }
+            }
+            Files.move(tempFile, target, StandardCopyOption.REPLACE_EXISTING);
+            Platform.runLater(() -> {
+                updateSnapshotTimestamp();
+                updateUpdateUi(false, -1L);
+            });
+        } catch (Exception e) {
+            System.err.println("Failed to update snapshot: " + e.getMessage());
+            Platform.runLater(() -> {
+                if (updateAvailableLabel != null) {
+                    updateAvailableLabel.setText("Update failed. Try again.");
+                    updateAvailableLabel.setVisible(true);
+                    updateAvailableLabel.setManaged(true);
+                }
+                if (updateButton != null) {
+                    updateButton.setDisable(false);
+                    updateButton.setText("Retry update");
+                }
+            });
+        } finally {
+            if (tempFile != null) {
+                try {
+                    Files.deleteIfExists(tempFile);
+                } catch (IOException ignored) {}
+            }
+            updateInProgress = false;
+            Platform.runLater(() -> {
+                if (updateButton != null) {
+                    updateButton.setDisable(false);
+                    updateButton.setText("Update now");
+                }
+            });
+            checkAndUpdateStatus();
+        }
     }
 }
