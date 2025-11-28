@@ -75,7 +75,7 @@
                 </center>
 
                 <right>
-                    <HBox spacing="8" alignment="TOP_RIGHT">
+                    <HBox spacing="8" alignment="CENTER_RIGHT">
                         <padding>
                             <Insets top="8" right="8" bottom="4" left="4"/>
                         </padding>
