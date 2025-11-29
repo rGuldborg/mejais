@@ -15,6 +15,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>21.0.9</javafx.version>
+        <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
         <main.class>org.example.Main</main.class>
     </properties>
 
@@ -95,6 +96,15 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>${javafx.maven.plugin.version}</version>
+                <configuration>
+                    <mainClass>${main.class}</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>

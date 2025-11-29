@@ -37,15 +37,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
 
 public class MainController {
 
     private static final DateTimeFormatter FOOTER_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private static final String ACTIVE_TAB_CLASS = "tab-chip-active";
-    private static final String REMOTE_DB_URL = System.getProperty(
-            "SNAPSHOT_REMOTE_URL",
-            System.getenv().getOrDefault("SNAPSHOT_REMOTE_URL", "")
-    );
+    private static final String DEFAULT_SNAPSHOT_URL = "https://raw.githubusercontent.com/rGuldborg/mejais/main/data/snapshot.db";
+    private static final String REMOTE_DB_URL = Optional.ofNullable(System.getProperty("SNAPSHOT_REMOTE_URL"))
+            .filter(url -> !url.isBlank())
+            .or(() -> Optional.ofNullable(System.getenv("SNAPSHOT_REMOTE_URL")).filter(url -> !url.isBlank()))
+            .orElse(DEFAULT_SNAPSHOT_URL);
 
 
     @FXML private TextField searchField;
@@ -471,11 +473,11 @@ public class MainController {
             if (available) {
                 updateButton.setDisable(updateInProgress);
                 if (!updateInProgress) {
-                    updateButton.setText("Update now");
+                    updateButton.setText("Load new match database");
                 }
             } else {
                 updateButton.setDisable(false);
-                updateButton.setText("Update now");
+                updateButton.setText("Load new match database");
             }
         }
     }

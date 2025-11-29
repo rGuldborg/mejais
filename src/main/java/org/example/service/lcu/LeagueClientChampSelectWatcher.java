@@ -2,6 +2,8 @@ package org.example.service.lcu;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.util.AppPaths;
+import org.example.util.DebugLog;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -53,6 +55,7 @@ public final class LeagueClientChampSelectWatcher {
         if (!running.compareAndSet(false, true)) {
             return;
         }
+        debug("LCU watcher starting.");
         connect();
     }
 
@@ -64,6 +67,7 @@ public final class LeagueClientChampSelectWatcher {
             wsClient.close();
         }
         reconnectExecutor.shutdownNow();
+        debug("LCU watcher stopped.");
     }
 
     private void connect() {
@@ -72,19 +76,24 @@ public final class LeagueClientChampSelectWatcher {
         try {
             Path lockfilePath = locateLockfile().orElse(null);
             if (lockfilePath == null) {
+                debug("No lockfile detected; scheduling reconnect.");
                 broadcast(ChampSelectSnapshot.waiting("Looking for League client..."));
                 scheduleReconnect();
                 return;
             }
 
+            debug("Lockfile found at " + lockfilePath);
             LockfileInfo info = readLockfile(lockfilePath);
+            debug("Connecting to LCU WebSocket on port " + info.port());
             URI uri = new URI("wss://127.0.0.1:" + info.port());
 
             wsClient = new LcuWebSocketClient(uri, info.authHeader());
-            wsClient.setSocket(buildSecureContext(lockfilePath).getSocketFactory().createSocket());
+            SSLContext sslContext = buildSecureContext(lockfilePath);
+            wsClient.setSocket(sslContext.getSocketFactory().createSocket());
             wsClient.connect();
 
         } catch (Exception e) {
+            debug("LCU connection failure: " + e);
             scheduleReconnect();
         }
     }
@@ -225,11 +234,15 @@ public final class LeagueClientChampSelectWatcher {
     }
 
     private Optional<Path> locateLockfile() {
-        Path override = Optional.ofNullable(System.getenv("LEAGUE_LOCKFILE_PATH"))
-                .map(Path::of)
-                .filter(Files::exists)
-                .orElse(null);
+        Path override = asExistingPath(asLockfileOverride(System.getProperty("LEAGUE_LOCKFILE_PATH")));
+        if (override == null) {
+            override = asExistingPath(asLockfileOverride(System.getenv("LEAGUE_LOCKFILE_PATH")));
+        }
+        if (override == null) {
+            override = asExistingPath(asLockfileOverride(readLockfileOverrideFromFile()));
+        }
         if (override != null) {
+            debug("Using lockfile override from environment: " + override);
             return Optional.of(override);
         }
 
@@ -251,19 +264,83 @@ public final class LeagueClientChampSelectWatcher {
                 candidates.add(driveRoot.resolve(Path.of("Riot Games", "League of Legends", "lockfile")));
                 candidates.add(driveRoot.resolve(Path.of("Riot Games", "Riot Client", "Config", "lockfile")));
             }
-            candidates.add(Path.of("C:", "Riot Games", "League of Legends", "lockfile"));
-            candidates.add(Path.of("C:", "Riot Games", "Riot Client", "Config", "lockfile"));
+            candidates.add(Path.of("C:/", "Riot Games", "League of Legends", "lockfile"));
+            candidates.add(Path.of("C:/", "Riot Games", "Riot Client", "Config", "lockfile"));
         } else if (os.contains("mac")) {
             candidates.add(Path.of("/Applications/League of Legends.app/Contents/LoL/lockfile"));
             candidates.add(Path.of(System.getProperty("user.home"), "Applications/League of Legends.app/Contents/LoL/lockfile"));
         }
 
         for (Path candidate : candidates) {
-            if (candidate != null && Files.exists(candidate)) {
+            if (isLeagueClientLockfile(candidate)) {
+                debug("Using LeagueClient lockfile candidate: " + candidate);
                 return Optional.of(candidate);
             }
         }
+
+        for (Path candidate : candidates) {
+            if (candidate != null && Files.exists(candidate)) {
+                debug("Using fallback lockfile candidate: " + candidate);
+                return Optional.of(candidate);
+            }
+        }
+        debug("Lockfile not found among candidates.");
         return Optional.empty();
+    }
+
+    private Path asExistingPath(String candidate) {
+        if (candidate == null || candidate.isBlank()) {
+            return null;
+        }
+        try {
+            Path path = Path.of(candidate);
+            if (Files.exists(path)) {
+                return path;
+            }
+        } catch (Exception ex) {
+            debug("Ignoring invalid lockfile override '" + candidate + "': " + ex.getMessage());
+        }
+        return null;
+    }
+
+    private String asLockfileOverride(String value) {
+        if (value == null) return null;
+        String trimmed = value.trim();
+        if (trimmed.isEmpty()) {
+            return null;
+        }
+        if (trimmed.startsWith("\"") && trimmed.endsWith("\"") && trimmed.length() > 1) {
+            trimmed = trimmed.substring(1, trimmed.length() - 1);
+        }
+        return trimmed.isEmpty() ? null : trimmed;
+    }
+
+    private String readLockfileOverrideFromFile() {
+        try {
+            Path overrideFile = AppPaths.locateDataFile("lockfile.override");
+            if (overrideFile != null && Files.exists(overrideFile)) {
+                return Files.readString(overrideFile, StandardCharsets.UTF_8);
+            }
+        } catch (IOException ignored) {
+        }
+        return null;
+    }
+
+    private boolean isLeagueClientLockfile(Path candidate) {
+        if (candidate == null || !Files.exists(candidate)) {
+            return false;
+        }
+        try {
+            String content = Files.readString(candidate, StandardCharsets.UTF_8).trim();
+            int separator = content.indexOf(':');
+            if (separator <= 0) {
+                return false;
+            }
+            String clientName = content.substring(0, separator);
+            return clientName.startsWith("LeagueClient");
+        } catch (IOException ignored) {
+            return false;
+        }
     }
 
     private void addWindowsLockfileCandidates(List<Path> candidates, String localAppData) {
@@ -284,6 +361,10 @@ public final class LeagueClientChampSelectWatcher {
 
     private SSLContext buildSecureContext(Path lockfilePath) {
         List<Path> certCandidates = new ArrayList<>();
+        Path packagedCert = AppPaths.locateDataFile("riotgames.pem");
+        if (packagedCert != null && Files.exists(packagedCert)) {
+            certCandidates.add(packagedCert);
+        }
         if (lockfilePath != null) {
             certCandidates.add(lockfilePath.getParent().resolve("riotgames.pem"));
         }
@@ -292,19 +373,22 @@ public final class LeagueClientChampSelectWatcher {
         if (localAppData != null) {
             certCandidates.add(Path.of(localAppData, "Riot Games", "Riot Client", "Config", "riotgames.pem"));
         }
-        certCandidates.add(Path.of("C:", "Riot Games", "League of Legends", "riotgames.pem"));
+        certCandidates.add(Path.of("C:/", "Riot Games", "League of Legends", "riotgames.pem"));
 
         for (Path candidate : certCandidates) {
             if (candidate != null && Files.exists(candidate)) {
                 try {
+                    debug("Loading LCU certificate from " + candidate);
                     return sslContextFromCertificate(candidate);
                 } catch (Exception ex) {
                     System.err.println("Failed to load LCU certificate from " + candidate + ": " + ex.getMessage());
+                    debug("Failed to load LCU certificate from " + candidate + ": " + ex.getMessage());
                 }
             }
         }
 
         System.err.println("Warning: LCU certificate not found; falling back to insecure SSL context.");
+        debug("LCU certificate not found; using insecure SSL context.");
         return insecureContext();
     }
 
@@ -356,6 +440,7 @@ public final class LeagueClientChampSelectWatcher {
         @Override
         public void onOpen(ServerHandshake handshakedata) {
             send(SUBSCRIBE_ALL_EVENTS);
+            debug("LCU websocket opened.");
             broadcast(ChampSelectSnapshot.waiting("Client idle (no champ select)."));
         }
 
@@ -366,6 +451,7 @@ public final class LeagueClientChampSelectWatcher {
 
         @Override
         public void onClose(int code, String reason, boolean remote) {
+            debug("LCU websocket closed code=" + code + ", reason=" + reason + ", remote=" + remote);
             broadcast(ChampSelectSnapshot.waiting("Looking for League client..."));
             if (running.get()) {
                 scheduleReconnect();
@@ -374,6 +460,11 @@ public final class LeagueClientChampSelectWatcher {
 
         @Override
         public void onError(Exception ex) {
+            debug("LCU websocket error: " + ex);
         }
+    }
+
+    private void debug(String message) {
+        DebugLog.log("[LCU] " + message);
     }
 }

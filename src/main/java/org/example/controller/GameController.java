@@ -788,6 +788,7 @@ public class GameController {
             icon.setFitHeight(18);
             icon.setPreserveRatio(true);
             chip.getChildren().add(icon);
+            slot.roleRow.getChildren().add(chip);
             chip.setOnMouseClicked(e -> {
                 selectRole(slot, role);
             });
