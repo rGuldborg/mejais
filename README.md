@@ -4,6 +4,8 @@
 
 Mejais is your personal League of Legends draft assistant, designed to give you a competitive edge before the game even starts. By analyzing millions of high-tier matches, Mejais provides real-time insights and recommendations during Champion Select.
 
+> Built by a 24-year-old programming student who tinkers with APIs and Spring Boot projects by day and crafted Mejais as a passion project by night.
+
 ## How to Use Mejais
 
 ### 1. Live Game Analysis
