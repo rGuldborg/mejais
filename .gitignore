@@ -36,5 +36,4 @@ build/
 .DS_Store
 
 GEMINI.md
-data/
 snapshot-kit/.env
