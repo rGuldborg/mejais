@@ -32,7 +32,7 @@ Ship a self-contained Windows build (portable zip + installer) with the helper s
 3. Run `powershell packaging/windows/package.ps1`. Pass `-Version 1.4.0` if you want the installer/app metadata to differ from the `pom.xml` version.
    - The script automatically downloads the matching JavaFX jmods for Windows x64 into `target/javafx/`, feeds them to `jlink`, and builds a trimmed runtime image (set `JAVAFX_JMODS` to reuse a local cache or `JAVAFX_PLATFORM` for ARM builds).
    - If `riotgames.pem` exists under `C:\Riot Games\League of Legends` or `%LOCALAPPDATA%\Riot Games\Riot Client\Config`, it will be copied into the packaged `data/` folder so SSL handshakes with the League client stay trusted.
-   - The script also writes `data/lockfile.override` inside the app image so the runtime always targets the real League Client lockfile path, even when installed through jpackage.
+   - The script also writes `data/lockfile.override` inside the app image so the runtime always targets the League Client lockfile path, even when installed through jpackage.
 
 The script performs `mvn package`, stages the shaded JAR together with the `data/` folder, and invokes `jpackage` twice:
 
@@ -43,9 +43,9 @@ Both artifacts include everything the runtime needs, so end users don't have to 
 
 ### Live Snapshot Updates
 
-The client now defaults its remote snapshot URL to the GitHub raw copy of `data/snapshot.db`
-(`https://raw.githubusercontent.com/rGuldborg/mejais/main/data/snapshot.db`). Every time you push
-a new snapshot to that path on GitHub, the hosted file's `Last-Modified` header changes. When the running
-app notices that timestamp is newer than the local `data/snapshot.db`, it automatically surfaces the
-"Update Available / Update now" banner in the footer. If you want to point at a different host, set the
-`SNAPSHOT_REMOTE_URL` system property or environment variable before launching the app/installer.
+Out of the box the app fetches its remote snapshot from
+`https://raw.githubusercontent.com/rGuldborg/mejais/main/data/snapshot.db`. Whenever that file is updated
+on GitHub, its `Last-Modified` header changes, and the running client will surface the
+"Update Available / Update now" footer button once it detects the newer timestamp. Point the app at a different
+host by setting the `SNAPSHOT_REMOTE_URL` system property or environment variable before launching the
+development build or installer.
