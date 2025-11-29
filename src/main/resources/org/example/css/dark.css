@@ -105,6 +105,15 @@
 
 
 .help-view-root {
+    -fx-background-color: transparent;
+}
+
+.help-view-root .viewport,
+.help-view-root .corner {
+    -fx-background-color: transparent;
+}
+
+.help-content {
     -fx-background-color: #131417;
     -fx-background-radius: 24;
     -fx-border-radius: 24;

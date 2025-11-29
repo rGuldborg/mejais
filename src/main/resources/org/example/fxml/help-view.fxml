@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -8,52 +9,69 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      alignment="TOP_CENTER" spacing="2" styleClass="help-view-root">
-    <padding>
-        <Insets right="10"  left="10"/>
-    </padding>
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fitToWidth="true"
+            vbarPolicy="NEVER"
+            hbarPolicy="NEVER"
+            pannable="true"
+            styleClass="help-view-root">
+    <content>
+        <VBox alignment="TOP_CENTER" spacing="2" styleClass="help-content">
+            <padding>
+                <Insets right="10" left="10" bottom="20" top="10"/>
+            </padding>
 
-    <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-        <image>
-            <Image url="@../images/logo/logot.png"/>
-        </image>
-    </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@../images/logo/logot.png"/>
+                </image>
+            </ImageView>
 
-    <VBox spacing="4" alignment="CENTER" maxWidth="780">
-        <Label text="Welcome to Mejais!" styleClass="help-title"/>
-        <TextFlow styleClass="help-body-text" textAlignment="CENTER">
-            <Text text="Mejais is your personal League of Legends draft assistant, designed to give you a competitive edge before the game even starts. By analyzing millions of high-tier matches, Mejais provides real-time insights and recommendations during Champion Select."/>
-        </TextFlow>
+            <VBox spacing="4" alignment="CENTER" maxWidth="780">
+                <Label text="Welcome to Mejais!" styleClass="help-title"/>
+                <TextFlow styleClass="help-body-text" textAlignment="CENTER">
+                    <Text text="Mejais is your personal League of Legends draft assistant, designed to give you a competitive edge before the game even starts. By analyzing millions of high-tier matches, Mejais provides real-time insights and recommendations during Champion Select."/>
+                </TextFlow>
 
-        <Label text="How to Use Mejais" styleClass="help-header"/>
+                <TextFlow styleClass="help-body-text" textAlignment="CENTER">
+                    <Text text="Mejais is built by a 24-year-old programming student who spends class time working with Spring Boot APIs and spends evenings polishing this side project to help fellow summoners draft smarter."/>
+                </TextFlow>
 
-        <Label text="1. Live Game Analysis" styleClass="help-subheader"/>
-        <TextFlow styleClass="help-body-text" textAlignment="CENTER">
-            <Text text="While in an active Champion Select in the League of Legends client, Mejais will automatically mirror the picks and bans in the 'Game' view. It analyzes team compositions and suggests the strongest champions for you to play based on synergies, counters, and overall team strength."/>
-        </TextFlow>
+                <Label text="How to Use Mejais" styleClass="help-header"/>
 
-        <Label text="2. Simulate a Draft" styleClass="help-subheader"/>
-        <TextFlow styleClass="help-body-text" textAlignment="CENTER">
-            <Text text="Want to theorycraft or prepare for a specific matchup? You can manually simulate a draft. Simply click on any empty champion slot to open the champion grid and make a selection. To clear a pick, just right-click on the champion's icon."/>
-        </TextFlow>
+                <Label text="1. Live Game Analysis" styleClass="help-subheader"/>
+                <TextFlow styleClass="help-body-text" textAlignment="CENTER">
+                    <Text text="While in an active Champion Select in the League of Legends client, Mejais will automatically mirror the picks and bans in the 'Game' view. It analyzes team compositions and suggests the strongest champions for you to play based on synergies, counters, and overall team strength."/>
+                </TextFlow>
 
-        <Label text="3. Explore Champions" styleClass="help-subheader"/>
-        <TextFlow styleClass="help-body-text" textAlignment="CENTER">
-            <Text text="Navigate to the 'Champions' tab to see detailed statistics for every champion. Select a champion to view their best and worst matchups, helping you understand their strengths and weaknesses in lane."/>
-        </TextFlow>
+                <Label text="2. Simulate a Draft" styleClass="help-subheader"/>
+                <TextFlow styleClass="help-body-text" textAlignment="CENTER">
+                    <Text text="Want to theorycraft or prepare for a specific matchup? You can manually simulate a draft. Simply click on any empty champion slot to open the champion grid and make a selection. To clear a pick, just right-click on the champion's icon."/>
+                </TextFlow>
 
-        <Label text="4. Role Assignment" styleClass="help-subheader"/>
-        <TextFlow styleClass="help-body-text" textAlignment="CENTER">
-            <Text text="Roles are typically assigned automatically based on the most common positions for each champion. If you're planning an off-meta pick, you can manually change the assigned role to refine the recommendations for your team's unique strategy."/>
-        </TextFlow>
+                <Label text="3. Explore Champions" styleClass="help-subheader"/>
+                <TextFlow styleClass="help-body-text" textAlignment="CENTER">
+                    <Text text="Navigate to the 'Champions' tab to see detailed statistics for every champion. Select a champion to view their best and worst matchups, helping you understand their strengths and weaknesses in lane."/>
+                </TextFlow>
 
-        <Label text="Legal Notice" styleClass="help-subheader"/>
-        <TextFlow styleClass="help-body-text" textAlignment="CENTER">
-            <Text text="Mejais isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games, and all associated properties are trademarks or registered trademarks of Riot Games, Inc."/>
-        </TextFlow>
+                <Label text="4. Role Assignment" styleClass="help-subheader"/>
+                <TextFlow styleClass="help-body-text" textAlignment="CENTER">
+                    <Text text="Roles are typically assigned automatically based on the most common positions for each champion. If you're planning an off-meta pick, you can manually change the assigned role to refine the recommendations for your team's unique strategy."/>
+                </TextFlow>
 
-        <Label text="Ready to climb? Let Mejais guide your draft!" styleClass="help-footer"/>
-    </VBox>
-</VBox>
+                <Label text="5. Load New Match Data" styleClass="help-subheader"/>
+                <TextFlow styleClass="help-body-text" textAlignment="CENTER">
+                    <Text text="Keep an eye on the bottom-left corner of the Game view. When the 'Load new match database' button lights up (usually a few days after Riot releases a new patch), click it to fetch the latest matchup data and keep your recommendations fresh."/>
+                </TextFlow>
+
+                <Label text="Legal Notice" styleClass="help-subheader"/>
+                <TextFlow styleClass="help-body-text" textAlignment="CENTER">
+                    <Text text="Mejais isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games, and all associated properties are trademarks or registered trademarks of Riot Games, Inc."/>
+                </TextFlow>
+
+                <Label text="Ready to climb? Let Mejais guide your draft!" styleClass="help-footer"/>
+            </VBox>
+        </VBox>
+    </content>
+</ScrollPane>
