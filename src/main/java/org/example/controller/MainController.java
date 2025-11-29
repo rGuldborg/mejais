@@ -43,7 +43,7 @@ public class MainController {
 
     private static final DateTimeFormatter FOOTER_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private static final String ACTIVE_TAB_CLASS = "tab-chip-active";
-    private static final String DEFAULT_SNAPSHOT_URL = "https://raw.githubusercontent.com/rGuldborg/mejais/main/data/snapshot.db";
+    private static final String DEFAULT_SNAPSHOT_URL = "https://raw.githubusercontent.com/rGuldborg/mejais/master/data/snapshot.db";
     private static final String REMOTE_DB_URL = Optional.ofNullable(System.getProperty("SNAPSHOT_REMOTE_URL"))
             .filter(url -> !url.isBlank())
             .or(() -> Optional.ofNullable(System.getenv("SNAPSHOT_REMOTE_URL")).filter(url -> !url.isBlank()))
