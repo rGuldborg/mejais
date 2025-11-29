@@ -37,3 +37,4 @@ build/
 
 GEMINI.md
 snapshot-kit/.env
+data/logs/
