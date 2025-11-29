@@ -59,18 +59,6 @@
                                    prefWidth="320"
                                    maxWidth="320"/>
 
-                        <Button fx:id="refreshButton"
-                                styleClass="window-control header-icon-button"
-                                onAction="#onRefresh">
-                            <graphic>
-                                <Group>
-                                    <SVGPath content="M8 1 A7 7 0 1 1 1 8"
-                                             styleClass="window-icon"/>
-                                    <SVGPath content="M1 8 L1 5 L3 5"
-                                             styleClass="window-icon"/>
-                                </Group>
-                            </graphic>
-                        </Button>
                     </HBox>
                 </center>
 

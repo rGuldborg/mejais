@@ -10,9 +10,9 @@
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      alignment="TOP_CENTER" spacing="4" styleClass="help-view-root">
+      alignment="TOP_CENTER" spacing="2" styleClass="help-view-root">
     <padding>
-        <Insets right="12"  left="12"/>
+        <Insets right="10"  left="10"/>
     </padding>
 
     <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
@@ -21,7 +21,7 @@
         </image>
     </ImageView>
 
-    <VBox spacing="6" alignment="CENTER" maxWidth="800">
+    <VBox spacing="4" alignment="CENTER" maxWidth="780">
         <Label text="Welcome to Mejais!" styleClass="help-title"/>
         <TextFlow styleClass="help-body-text" textAlignment="CENTER">
             <Text text="Mejais is your personal League of Legends draft assistant, designed to give you a competitive edge before the game even starts. By analyzing millions of high-tier matches, Mejais provides real-time insights and recommendations during Champion Select."/>

@@ -22,3 +22,13 @@ Ready to climb? Let Mejais guide your draft!
 
 ## Legal
 Mejais isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games, and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
+
+## Packaging a Windows Installer
+
+To ship a standalone EXE that bundles a private JRE:
+
+1. Install JDK 17+ so `jpackage` is available (set `JAVA_HOME` or `JPACKAGE_PATH`).
+2. Place your latest `data/snapshot.db` under the project’s `data/` folder.
+3. Run `powershell packaging/windows/package.ps1 -Version 1.3.0`.
+
+The script runs `mvn clean package`, copies the app JAR and snapshot into a staging area, and invokes `jpackage` to create `target/installer/dist/Mejais-1.3.0.exe`. Upload that EXE to your website—players won’t need Java installed locally.

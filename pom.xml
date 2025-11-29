@@ -97,7 +97,38 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>org.example.Main</mainClass>
+                    <launcher>Mejais</launcher>
+                    <jlinkZip>false</jlinkZip>
+                    <jlinkImageName>Mejais</jlinkImageName>
+                    <stripNativeCommands>false</stripNativeCommands>
+                    <noManPages>true</noManPages>
+                    <stripDebug>true</stripDebug>
+                    <includeLocales>en</includeLocales>
+                    <launcher>Mejais</launcher>
+                    <jpackageImageName>Mejais</jpackageImageName>
+                    <jpackageOutputDir>${project.basedir}/target/dist</jpackageOutputDir>
+                    <jpackageImageOutput>${project.basedir}/target/dist/Mejais</jpackageImageOutput>
+                    <jpackage>
+                        <type>app-image</type>
+                        <icon>${project.basedir}/src/main/resources/org/example/images/logo/output.ico</icon>
+                        <resourceDir>${project.basedir}/packaging/resources</resourceDir>
+                    </jpackage>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>jlink</id>
+                        <goals>
+                            <goal>jlink</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jpackage</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jpackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
