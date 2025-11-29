@@ -247,7 +247,7 @@ public class MainController {
             return;
         }
         updateInProgress = true;
-        updateAvailableLabel.setText("Updating...");
+        updateAvailableLabel.setText("Checking for match updates...");
         new Thread(this::downloadSnapshot).start();
     }
 
@@ -487,7 +487,7 @@ public class MainController {
     private void updateUpdateUi(boolean available, boolean versionMismatch, long remoteStamp) {
         if (updateAvailableLabel == null) return;
         if (available) {
-            updateAvailableLabel.setText(versionMismatch ? "New Mejais build available!" : "Snapshot update ready!");
+            updateAvailableLabel.setText(versionMismatch ? "New match data available!" : "Match database up to date");
             updateAvailableLabel.setVisible(true);
             updateAvailableLabel.setManaged(true);
             refreshUpdateLinkStyle();

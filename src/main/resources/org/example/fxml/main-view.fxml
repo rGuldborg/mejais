@@ -137,7 +137,7 @@
             <Label fx:id="patchLabel" text="Patch: --" styleClass="footer-text"/>
             <Label fx:id="updateSeparator" text="|" styleClass="footer-text" visible="false" managed="false"/>
             <Label fx:id="updateAvailableLabel"
-                   text="Update Available!"
+                   text="Check for match database update"
                    visible="false"
                    managed="false"
                    onMouseClicked="#onUpdateSnapshot"

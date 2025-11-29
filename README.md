@@ -20,8 +20,8 @@ Navigate to the 'Champions' tab to see detailed statistics for every champion. S
 ### 4. Role Assignment
 Roles are typically assigned automatically based on the most common positions for each champion. If you're planning an off-meta pick, you can manually change the assigned role to refine the recommendations for your team's unique strategy.
 
-### 5. Load New Matches
-When the "Load new match database" link lights up in the bottom-left corner of the Game view, new matchup data is available (typically a few days after Riot publishes a new patch). Click it to download the latest snapshot and keep your recommendations fresh.
+### 5. Check for Match Updates
+When the "Check for match database update" link lights up in the bottom-left corner of the Game view, new matchup data is available (typically a few days after Riot publishes a new patch). Click it to download the latest snapshot and keep your recommendations fresh.
 
 Ready to climb? Let Mejais guide your draft!
 
@@ -46,4 +46,4 @@ The script performs `mvn package`, stages the shaded JAR together with the `data
 
 Both artifacts include everything the runtime needs, so end users don't have to install Java or download additional JavaFX modules.
 
-Whenever you push an updated `data/snapshot.db` to GitHub, the installed app will light up the "Load new match database" link automatically so users can grab the latest matchup data straight from the Game view.
+Whenever you push an updated `data/snapshot.db` to GitHub, the installed app will light up the "Check for match database update" link automatically so users can grab the latest matchup data straight from the Game view.
