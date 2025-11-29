@@ -25,6 +25,59 @@ function Resolve-JPackage {
     throw "Could not locate jpackage. Install JDK 17+ and ensure jpackage.exe is on PATH or set JPACKAGE_PATH."
 }
 
+function Resolve-SignTool {
+    if ($env:SIGNTOOL_PATH -and (Test-Path $env:SIGNTOOL_PATH)) {
+        return (Resolve-Path $env:SIGNTOOL_PATH).Path
+    }
+
+    $cmd = Get-Command signtool.exe -ErrorAction SilentlyContinue
+    if ($cmd) {
+        return $cmd.Source
+    }
+
+    return $null
+}
+
+function Invoke-CodeSign {
+    param(
+        [string[]]$Targets
+    )
+
+    $certPath = $env:SIGNING_CERT_PATH
+    if (-not $certPath -or -not $Targets -or $Targets.Count -eq 0) {
+        return
+    }
+
+    if (-not (Test-Path $certPath)) {
+        throw "SIGNING_CERT_PATH is set but the file was not found: $certPath"
+    }
+
+    $signTool = Resolve-SignTool
+    if (-not $signTool) {
+        throw "SIGNING_CERT_PATH is configured but signtool.exe is missing. Install the Windows SDK or set SIGNTOOL_PATH."
+    }
+
+    $resolvedCert = (Resolve-Path $certPath).Path
+    $timestampUrl = if ($env:SIGNING_TIMESTAMP_URL) { $env:SIGNING_TIMESTAMP_URL } else { "http://timestamp.digicert.com" }
+    $password = $env:SIGNING_CERT_PASSWORD
+
+    foreach ($target in $Targets) {
+        if (-not (Test-Path $target)) {
+            continue
+        }
+        $resolvedTarget = (Resolve-Path $target).Path
+        $args = @("sign", "/fd", "SHA256", "/td", "SHA256", "/tr", $timestampUrl, "/f", $resolvedCert)
+        if ($password) {
+            $args += @("/p", $password)
+        }
+        $args += $resolvedTarget
+        & $signTool @args
+        if ($LASTEXITCODE -ne 0) {
+            throw "signtool.exe failed while signing $resolvedTarget"
+        }
+    }
+}
+
 function Get-JavaFxPlatform {
     if ($env:JAVAFX_PLATFORM) {
         return $env:JAVAFX_PLATFORM
@@ -258,6 +311,8 @@ try {
     New-Item -ItemType Directory -Path $TempDir | Out-Null
 
     $AppImagePath = Join-Path $DistDir $AppName
+    $AppExecutable = Join-Path $AppImagePath "$AppName.exe"
+    Invoke-CodeSign -Targets $AppExecutable
     $PortableZip = Join-Path $DistDir "$AppName-$Version-portable.zip"
     if (Test-Path $PortableZip) {
         Remove-Item $PortableZip -Force
@@ -287,6 +342,7 @@ try {
     }
 
     $Installer = Join-Path $DistDir "$AppName-$Version.exe"
+    Invoke-CodeSign -Targets $Installer
     Write-Host ""
     Write-Host "Portable zip : $PortableZip"
     if (Test-Path $Installer) {

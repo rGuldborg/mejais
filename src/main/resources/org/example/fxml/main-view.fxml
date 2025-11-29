@@ -70,7 +70,8 @@
 
                         <Button fx:id="minimizeButton"
                                 onAction="#onMinimize"
-                                styleClass="window-control text-button window-minimize">
+                                styleClass="window-control text-button window-minimize"
+                                translateY="6">
                             <graphic>
                                 <SVGPath content="M2 7 H14" styleClass="window-icon"/>
                             </graphic>

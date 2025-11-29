@@ -47,3 +47,14 @@ The script performs `mvn package`, stages the shaded JAR together with the `data
 Both artifacts include everything the runtime needs, so end users don't have to install Java or download additional JavaFX modules.
 
 Whenever you push an updated `data/snapshot.db` to GitHub, the installed app will light up the "Check for match database update" link automatically so users can grab the latest matchup data straight from the Game view.
+
+### Optional: Code signing
+
+Unsigned executables will always trigger Windows Defender SmartScreen warnings. Provide a valid Authenticode certificate (issued by a commercial CA) and set these environment variables before running the packaging script to embed a trusted signature automatically:
+
+- `SIGNING_CERT_PATH` – path to your `.pfx` (or `.p12`) code-signing certificate file.
+- `SIGNING_CERT_PASSWORD` – password for the certificate (omit if the key is not protected).
+- `SIGNTOOL_PATH` – optional override if `signtool.exe` isn't on `PATH` (usually `C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64\signtool.exe`).
+- `SIGNING_TIMESTAMP_URL` – optional timestamp authority URL (defaults to DigiCert's TSA).
+
+With those variables in place the build script signs both `Mejais.exe` inside the portable app image and the generated installer, which keeps SmartScreen from flagging downloads as “unknown publisher.”

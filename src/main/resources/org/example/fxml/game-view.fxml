@@ -50,45 +50,45 @@
                         <VBox spacing="14" alignment="CENTER">
                             <HBox spacing="10" alignment="CENTER">
                                 <VBox spacing="5" alignment="CENTER_LEFT" prefWidth="60" maxWidth="60">
-                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="OP" styleClass="stat-bar-label"/><Rectangle fx:id="allyPick1OpBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="SYN" styleClass="stat-bar-label"/><Rectangle fx:id="allyPick1SynBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="CO" styleClass="stat-bar-label"/><Rectangle fx:id="allyPick1CoBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="OP" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_RIGHT"/><Rectangle fx:id="allyPick1OpBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="SY" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_RIGHT"/><Rectangle fx:id="allyPick1SynBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="CO" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_RIGHT"/><Rectangle fx:id="allyPick1CoBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
                                 </VBox>
                                 <ImageView fx:id="allyPick1" fitWidth="78" fitHeight="78"/>
                                 <HBox fx:id="allyRoleRow1" spacing="4" alignment="CENTER"/>
                             </HBox>
                             <HBox spacing="10" alignment="CENTER">
                                 <VBox spacing="5" alignment="CENTER_LEFT" prefWidth="60" maxWidth="60">
-                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="OP" styleClass="stat-bar-label"/><Rectangle fx:id="allyPick2OpBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="SYN" styleClass="stat-bar-label"/><Rectangle fx:id="allyPick2SynBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="CO" styleClass="stat-bar-label"/><Rectangle fx:id="allyPick2CoBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="OP" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_RIGHT"/><Rectangle fx:id="allyPick2OpBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="SY" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_RIGHT"/><Rectangle fx:id="allyPick2SynBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="CO" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_RIGHT"/><Rectangle fx:id="allyPick2CoBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
                                 </VBox>
                                 <ImageView fx:id="allyPick2" fitWidth="78" fitHeight="78"/>
                                 <HBox fx:id="allyRoleRow2" spacing="4" alignment="CENTER"/>
                             </HBox>
                             <HBox spacing="10" alignment="CENTER">
                                 <VBox spacing="5" alignment="CENTER_LEFT" prefWidth="60" maxWidth="60">
-                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="OP" styleClass="stat-bar-label"/><Rectangle fx:id="allyPick3OpBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="SYN" styleClass="stat-bar-label"/><Rectangle fx:id="allyPick3SynBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="CO" styleClass="stat-bar-label"/><Rectangle fx:id="allyPick3CoBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="OP" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_RIGHT"/><Rectangle fx:id="allyPick3OpBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="SY" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_RIGHT"/><Rectangle fx:id="allyPick3SynBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="CO" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_RIGHT"/><Rectangle fx:id="allyPick3CoBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
                                 </VBox>
                                 <ImageView fx:id="allyPick3" fitWidth="78" fitHeight="78"/>
                                 <HBox fx:id="allyRoleRow3" spacing="4" alignment="CENTER"/>
                             </HBox>
                             <HBox spacing="10" alignment="CENTER">
                                 <VBox spacing="5" alignment="CENTER_LEFT" prefWidth="60" maxWidth="60">
-                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="OP" styleClass="stat-bar-label"/><Rectangle fx:id="allyPick4OpBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="SYN" styleClass="stat-bar-label"/><Rectangle fx:id="allyPick4SynBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="CO" styleClass="stat-bar-label"/><Rectangle fx:id="allyPick4CoBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="OP" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_RIGHT"/><Rectangle fx:id="allyPick4OpBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="SY" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_RIGHT"/><Rectangle fx:id="allyPick4SynBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="CO" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_RIGHT"/><Rectangle fx:id="allyPick4CoBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
                                 </VBox>
                                 <ImageView fx:id="allyPick4" fitWidth="78" fitHeight="78"/>
                                 <HBox fx:id="allyRoleRow4" spacing="4" alignment="CENTER"/>
                             </HBox>
                             <HBox spacing="10" alignment="CENTER">
                                 <VBox spacing="5" alignment="CENTER_LEFT" prefWidth="60" maxWidth="60">
-                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="OP" styleClass="stat-bar-label"/><Rectangle fx:id="allyPick5OpBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="SYN" styleClass="stat-bar-label"/><Rectangle fx:id="allyPick5SynBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="CO" styleClass="stat-bar-label"/><Rectangle fx:id="allyPick5CoBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="OP" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_RIGHT"/><Rectangle fx:id="allyPick5OpBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="SY" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_RIGHT"/><Rectangle fx:id="allyPick5SynBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_LEFT"><Label text="CO" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_RIGHT"/><Rectangle fx:id="allyPick5CoBar" width="40" height="8" styleClass="ally-stat-bar"/></HBox>
                                 </VBox>
                                 <ImageView fx:id="allyPick5" fitWidth="78" fitHeight="78"/>
                                 <HBox fx:id="allyRoleRow5" spacing="4" alignment="CENTER"/>
@@ -144,7 +144,7 @@
                         <columns>
                             <TableColumn fx:id="championCol" text="Champion" prefWidth="200"/>
                             <TableColumn fx:id="opCol" text="OP" prefWidth="80"/>
-                            <TableColumn fx:id="synCol" text="SYN" prefWidth="80"/>
+                            <TableColumn fx:id="synCol" text="SY" prefWidth="80"/>
                             <TableColumn fx:id="coCol" text="CO" prefWidth="80"/>
                             <TableColumn fx:id="scoreCol" text="Score" prefWidth="160"/>
                         </columns>
@@ -197,45 +197,45 @@
                                 <HBox fx:id="enemyRoleRow1" spacing="4" alignment="CENTER"/>
                                 <ImageView fx:id="enemyPick1" fitWidth="78" fitHeight="78"/>
                                 <VBox spacing="5" alignment="CENTER_RIGHT" prefWidth="60" maxWidth="60">
-                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick1OpBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="OP" styleClass="stat-bar-label"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick1SynBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="SYN" styleClass="stat-bar-label"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick1CoBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="CO" styleClass="stat-bar-label"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick1OpBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="OP" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_LEFT"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick1SynBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="SY" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_LEFT"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick1CoBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="CO" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_LEFT"/></HBox>
                                 </VBox>
                             </HBox>
                             <HBox spacing="10" alignment="CENTER">
                                 <HBox fx:id="enemyRoleRow2" spacing="4" alignment="CENTER"/>
                                 <ImageView fx:id="enemyPick2" fitWidth="78" fitHeight="78"/>
                                 <VBox spacing="5" alignment="CENTER_RIGHT" prefWidth="60" maxWidth="60">
-                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick2OpBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="OP" styleClass="stat-bar-label"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick2SynBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="SYN" styleClass="stat-bar-label"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick2CoBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="CO" styleClass="stat-bar-label"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick2OpBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="OP" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_LEFT"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick2SynBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="SY" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_LEFT"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick2CoBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="CO" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_LEFT"/></HBox>
                                 </VBox>
                             </HBox>
                             <HBox spacing="10" alignment="CENTER">
                                 <HBox fx:id="enemyRoleRow3" spacing="4" alignment="CENTER"/>
                                 <ImageView fx:id="enemyPick3" fitWidth="78" fitHeight="78"/>
                                 <VBox spacing="5" alignment="CENTER_RIGHT" prefWidth="60" maxWidth="60">
-                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick3OpBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="OP" styleClass="stat-bar-label"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick3SynBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="SYN" styleClass="stat-bar-label"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick3CoBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="CO" styleClass="stat-bar-label"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick3OpBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="OP" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_LEFT"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick3SynBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="SY" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_LEFT"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick3CoBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="CO" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_LEFT"/></HBox>
                                 </VBox>
                             </HBox>
                             <HBox spacing="10" alignment="CENTER">
                                 <HBox fx:id="enemyRoleRow4" spacing="4" alignment="CENTER"/>
                                 <ImageView fx:id="enemyPick4" fitWidth="78" fitHeight="78"/>
                                 <VBox spacing="5" alignment="CENTER_RIGHT" prefWidth="60" maxWidth="60">
-                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick4OpBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="OP" styleClass="stat-bar-label"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick4SynBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="SYN" styleClass="stat-bar-label"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick4CoBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="CO" styleClass="stat-bar-label"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick4OpBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="OP" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_LEFT"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick4SynBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="SY" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_LEFT"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick4CoBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="CO" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_LEFT"/></HBox>
                                 </VBox>
                             </HBox>
                             <HBox spacing="10" alignment="CENTER">
                                 <HBox fx:id="enemyRoleRow5" spacing="4" alignment="CENTER"/>
                                 <ImageView fx:id="enemyPick5" fitWidth="78" fitHeight="78"/>
                                 <VBox spacing="5" alignment="CENTER_RIGHT" prefWidth="60" maxWidth="60">
-                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick5OpBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="OP" styleClass="stat-bar-label"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick5SynBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="SYN" styleClass="stat-bar-label"/></HBox>
-                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick5CoBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="CO" styleClass="stat-bar-label"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick5OpBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="OP" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_LEFT"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick5SynBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="SY" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_LEFT"/></HBox>
+                                    <HBox spacing="4" alignment="CENTER_RIGHT"><Rectangle fx:id="enemyPick5CoBar" width="40" height="8" styleClass="enemy-stat-bar"/><Label text="CO" styleClass="stat-bar-label" prefWidth="28" alignment="CENTER_LEFT"/></HBox>
                                 </VBox>
                             </HBox>
                         </VBox>
